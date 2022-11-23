@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:beasts_and_bards/authentication/sign_up.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'authentication/welcome_screen.dart';
@@ -23,10 +24,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const WelcomeScreen(),
+      // home: const WelcomeScreen(),
       initialRoute: 'welcome_screen',
       routes: {
         'welcome_screen': (context) => const WelcomeScreen(),
+        'sign_up':(context) => const RegistrationScreen(),
       },
       theme: ThemeData(
         fontFamily: 'Iceberg',

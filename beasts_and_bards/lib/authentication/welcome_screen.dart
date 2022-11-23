@@ -15,14 +15,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               const RenderGif(),
               RoundedButton(colour: Colors.red, title: 'Log In', onPressed: (){}),
-              RoundedButton(colour: Colors.red, title: 'Create Account', onPressed: (){}),
+              RoundedButton(
+                colour: Colors.red,
+                title: 'Create Account',
+                onPressed: (){
+                  Navigator.pushNamed(context, 'sign_up');
+              }),
             ]
           )
       ),
