@@ -2,12 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:ui';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'authentication/welcome_screen.dart';
 
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 
-void main() {
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // await FirebaseAuth.instance.useAuthEmulator('localhost',9099);
   runApp(const MyApp());
 }
 
@@ -17,7 +23,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Startup Name Generator',
+      home: const WelcomeScreen(),
+      initialRoute: 'welcome_screen',
+      routes: {
+        'welcome_screen': (context) => const WelcomeScreen(),
+      },
       theme: ThemeData(
         fontFamily: 'Iceberg',
         appBarTheme: const AppBarTheme(
@@ -25,114 +35,113 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
       ),
-      home: const RandomWords(),
     );
   }
 }
 
-class _RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _saved = <WordPair>{};
-  final _biggerFont = const TextStyle(fontSize: 18);
+// class _RandomWordsState extends State<RandomWords> {
+//   final _suggestions = <WordPair>[];
+//   final _saved = <WordPair>{};
+//   final _biggerFont = const TextStyle(fontSize: 18);
+// 
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Startup Name Generator'),
+//         leading: IconButton(
+//             icon: const Icon(Icons.list),
+//             onPressed: _pushSaved,
+//             tooltip: 'Saved Suggestions',
+//         ),
+//         actions: [
+//           IconButton(
+//             icon: const Icon(Icons.list),
+//             onPressed: _pushSaved,
+//             tooltip: 'Saved Suggestions',
+//           ),
+//         ],
+//       ),
+//       body: Center(
+//         child: Image.asset(
+//           "images/title.gif",
+//           height: 250.0,
+//           width: 250.0,
+//         )
+//       ),
+//       // body: ListView.builder(
+//       //   padding: const EdgeInsets.all(16.0),
+//       //   itemBuilder: (context, i) {
+//       //     if (i.isOdd) return const Divider();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Startup Name Generator'),
-        leading: IconButton(
-            icon: const Icon(Icons.list),
-            onPressed: _pushSaved,
-            tooltip: 'Saved Suggestions',
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.list),
-            onPressed: _pushSaved,
-            tooltip: 'Saved Suggestions',
-          ),
-        ],
-      ),
-      body: Center(
-        child: Image.asset(
-          "images/title.gif",
-          height: 250.0,
-          width: 250.0,
-        )
-      ),
-      // body: ListView.builder(
-      //   padding: const EdgeInsets.all(16.0),
-      //   itemBuilder: (context, i) {
-      //     if (i.isOdd) return const Divider();
+//       //     final index = i ~/ 2;
+//       //     if (index >= _suggestions.length) {
+//       //       _suggestions.addAll(generateWordPairs().take(10));
+//       //     }
 
-      //     final index = i ~/ 2;
-      //     if (index >= _suggestions.length) {
-      //       _suggestions.addAll(generateWordPairs().take(10));
-      //     }
+//       //     final alreadySaved = _saved.contains(_suggestions[index]);
 
-      //     final alreadySaved = _saved.contains(_suggestions[index]);
+//       //     return ListTile(
+//       //       title: Text(
+//       //         _suggestions[index].asPascalCase,
+//       //         style: _biggerFont,
+//       //       ),
+//       //       trailing: Icon(
+//       //         alreadySaved ? Icons.favorite : Icons.favorite_border,
+//       //         color: alreadySaved ? Colors.red : null,
+//       //         semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+//       //       ),
+//       //       onTap: () {
+//       //         setState(() {
+//       //           if (alreadySaved) {
+//       //             _saved.remove(_suggestions[index]);
+//       //           } else {
+//       //             _saved.add(_suggestions[index]);
+//       //           }
+//       //         });
+//       //       },
+//       //     );
+//       //   },
+//       // ),
+//     );
+//   }
 
-      //     return ListTile(
-      //       title: Text(
-      //         _suggestions[index].asPascalCase,
-      //         style: _biggerFont,
-      //       ),
-      //       trailing: Icon(
-      //         alreadySaved ? Icons.favorite : Icons.favorite_border,
-      //         color: alreadySaved ? Colors.red : null,
-      //         semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
-      //       ),
-      //       onTap: () {
-      //         setState(() {
-      //           if (alreadySaved) {
-      //             _saved.remove(_suggestions[index]);
-      //           } else {
-      //             _saved.add(_suggestions[index]);
-      //           }
-      //         });
-      //       },
-      //     );
-      //   },
-      // ),
-    );
-  }
+//   void _pushSaved() {
+//     Navigator.of(context).push(
+//       MaterialPageRoute<void>(
+//         builder: (context) {
+//           final tiles = _saved.map(
+//             (pair) {
+//               return ListTile(
+//                 title: Text(
+//                   pair.asPascalCase,
+//                   style: _biggerFont,
+//                 ),
+//               );
+//             },
+//           );
+//           final divided = tiles.isNotEmpty
+//               ? ListTile.divideTiles(
+//                   context: context,
+//                   tiles: tiles,
+//                 ).toList()
+//               : <Widget>[];
 
-  void _pushSaved() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) {
-          final tiles = _saved.map(
-            (pair) {
-              return ListTile(
-                title: Text(
-                  pair.asPascalCase,
-                  style: _biggerFont,
-                ),
-              );
-            },
-          );
-          final divided = tiles.isNotEmpty
-              ? ListTile.divideTiles(
-                  context: context,
-                  tiles: tiles,
-                ).toList()
-              : <Widget>[];
+//           return Scaffold(
+//             appBar: AppBar(
+//               title: const Text('Saved Suggestions'),
+//             ),
+//             body: ListView(children: divided),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
 
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Saved Suggestions'),
-            ),
-            body: ListView(children: divided),
-          );
-        },
-      ),
-    );
-  }
-}
+// class RandomWords extends StatefulWidget {
+//   const RandomWords({super.key});
 
-class RandomWords extends StatefulWidget {
-  const RandomWords({super.key});
-
-  @override
-  State<RandomWords> createState() => _RandomWordsState();
-}
+//   @override
+//   State<RandomWords> createState() => _RandomWordsState();
+// }

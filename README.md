@@ -29,3 +29,7 @@ https://docs.flutter.dev/get-started/editor?tab=androidstudio
 ### Cool website for fonts
 Iceberg font obtained here:
 https://fonts.google.com/
+
+
+### How to structure a flutter project
+https://kodytechnolab.com/blog/layer-first-or-feature-first-flutter-project-structure/
