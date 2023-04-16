@@ -6,6 +6,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,9 +43,9 @@ class _RandomWordsState extends State<RandomWords> {
       appBar: AppBar(
         title: const Text('Startup Name Generator'),
         leading: IconButton(
-            icon: const Icon(Icons.list),
-            onPressed: _pushSaved,
-            tooltip: 'Saved Suggestions',
+          icon: const Icon(Icons.list),
+          onPressed: _pushSaved,
+          tooltip: 'Saved Suggestions',
         ),
         actions: [
           IconButton(
@@ -54,12 +56,11 @@ class _RandomWordsState extends State<RandomWords> {
         ],
       ),
       body: Center(
-        child: Image.asset(
-          "images/title.gif",
-          height: 250.0,
-          width: 250.0,
-        )
-      ),
+          child: Image.asset(
+        "images/title.gif",
+        height: 250.0,
+        width: 250.0,
+      )),
       // body: ListView.builder(
       //   padding: const EdgeInsets.all(16.0),
       //   itemBuilder: (context, i) {
