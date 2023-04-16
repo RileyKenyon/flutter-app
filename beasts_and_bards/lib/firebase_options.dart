@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     projectId: 'dndweb',
     databaseURL: 'https://dndweb-default-rtdb.firebaseio.com',
     storageBucket: 'dndweb.appspot.com',
-    androidClientId: '604995607903-c4bjp0o5ta8tnvipou566il0b4m45gi5.apps.googleusercontent.com',
-    iosClientId: '604995607903-ls657qr8e0eiojg7ojb73ob690rnmvfs.apps.googleusercontent.com',
+    androidClientId:
+        '604995607903-c4bjp0o5ta8tnvipou566il0b4m45gi5.apps.googleusercontent.com',
+    iosClientId:
+        '604995607903-ls657qr8e0eiojg7ojb73ob690rnmvfs.apps.googleusercontent.com',
     iosBundleId: 'com.example.beastsAndBards',
   );
 
@@ -82,8 +84,10 @@ class DefaultFirebaseOptions {
     projectId: 'dndweb',
     databaseURL: 'https://dndweb-default-rtdb.firebaseio.com',
     storageBucket: 'dndweb.appspot.com',
-    androidClientId: '604995607903-c4bjp0o5ta8tnvipou566il0b4m45gi5.apps.googleusercontent.com',
-    iosClientId: '604995607903-ls657qr8e0eiojg7ojb73ob690rnmvfs.apps.googleusercontent.com',
+    androidClientId:
+        '604995607903-c4bjp0o5ta8tnvipou566il0b4m45gi5.apps.googleusercontent.com',
+    iosClientId:
+        '604995607903-ls657qr8e0eiojg7ojb73ob690rnmvfs.apps.googleusercontent.com',
     iosBundleId: 'com.example.beastsAndBards',
   );
 }
