@@ -48,6 +48,12 @@ flutter doctor --android-licenses
 You can do this for Android Studio / VS Code - I'll be using VS Code
 https://docs.flutter.dev/get-started/editor?tab=androidstudio
 
+### Add firebase support
+Follow the firebase setup for apps:
+https://firebase.google.com/docs/flutter/setup?platform=android
+```
+dart pub global activate flutterfire_cli
+```
 ### Cool website for fonts
 Iceberg font obtained here:
 https://fonts.google.com/
