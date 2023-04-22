@@ -15,8 +15,6 @@ class CreateGameForm extends StatefulWidget {
 
 class _CreateGameFormState extends State<CreateGameForm> {
   final textController = TextEditingController();
-  final List<String> items =
-      List<String>.generate(100, (index) => 'Item $index');
 
   @override
   void dispose() {
@@ -53,18 +51,23 @@ class _CreateGameFormState extends State<CreateGameForm> {
                 decoration: InputDecoration(hintText: "Names"),
               ),
             ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 300),
-              child: ListView.builder(
-                itemCount: items.length,
-                prototypeItem: ListTile(
-                  title: Text(items.first),
+            Visibility(
+              visible: widget.appState.friendsList.isNotEmpty,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 300),
+                child: ListView.builder(
+                  itemCount: widget.appState.friendsList.length,
+                  prototypeItem: ListTile(
+                    title: Text(widget.appState.friendsList.isNotEmpty
+                        ? widget.appState.friendsList.first.name
+                        : "None"),
+                  ),
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(widget.appState.friendsList[index].name),
+                    );
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(items[index]),
-                  );
-                },
               ),
             ),
             OutlinedButton(

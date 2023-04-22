@@ -39,23 +39,6 @@ class DashboardPage extends StatelessWidget {
             child:
                 Text('Welcome!', style: Theme.of(context).textTheme.titleLarge),
           ),
-          Visibility(
-            visible: friends.isNotEmpty,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 300),
-              child: ListView.builder(
-                itemCount: friends.length,
-                prototypeItem: ListTile(
-                  title: Text(friends.isNotEmpty ? friends.first.name : "None"),
-                ),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(friends[index].name),
-                  );
-                },
-              ),
-            ),
-          ),
         ]),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,

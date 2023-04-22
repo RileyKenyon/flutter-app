@@ -39,44 +39,6 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
-            // const Divider(
-            //   height: 8,
-            //   thickness: 1,
-            //   indent: 8,
-            //   endIndent: 8,
-            //   color: Colors.grey,
-            // ),
-            // const Header("What we'll be doing"),
-            // Consumer<ApplicationState>(
-            //   builder: (context, appState, _) => Paragraph(
-            //     appState.callToAction,
-            //   ),
-            // ),
-            // Consumer<ApplicationState>(
-            //   builder: (context, appState, _) => Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       if (appState.attendees >= 2)
-            //         Paragraph('${appState.attendees} people going')
-            //       else if (appState.attendees == 1)
-            //         const Paragraph('1 person going')
-            //       else
-            //         const Paragraph('No one going'),
-            //       if (appState.loggedIn) ...[
-            //         YesNoSelection(
-            //           state: appState.attending,
-            //           onSelection: (attending) => appState.attending = attending,
-            //         ),
-            //         // const Header('Discussion'),
-            //         // GuestBook(
-            //         //   addMessage: (message) =>
-            //         //       appState.addMessageToDatabase(message),
-            //         //   messages: appState.guestBookMessages,
-            //         // ),
-            //       ],
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
