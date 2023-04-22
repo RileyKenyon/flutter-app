@@ -9,10 +9,10 @@ import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
-import 'guest_book_message.dart';
 
 enum Attending { yes, no, unknown }
 
@@ -29,40 +29,8 @@ class ApplicationState extends ChangeNotifier {
 
   bool get emailVerified => _emailVerified;
 
-  StreamSubscription<QuerySnapshot>? _guestBookSubscription;
-  List<GuestBookMessage> _guestBookMessages = [];
-
-  List<GuestBookMessage> get guestBookMessages => _guestBookMessages;
-
-  int _attendees = 0;
-
-  int get attendees => _attendees;
-
-  static Map<String, dynamic> defaultValues = <String, dynamic>{
-    'event_date': 'October 18, 2022',
-    'enable_free_swag': false,
-    'call_to_action': 'Join us for a day full of Firebase Workshops and Pizza!',
-  };
-
-  // ignoring lints on these fields since we are modifying them in a different
-  // part of the codelab
-  // ignore: prefer_final_fields
-  bool _enableFreeSwag = defaultValues['enable_free_swag'] as bool;
-
-  bool get enableFreeSwag => _enableFreeSwag;
-
-  // ignore: prefer_final_fields
-  String _eventDate = defaultValues['event_date'] as String;
-
-  String get eventDate => _eventDate;
-
-  // ignore: prefer_final_fields
-  String _callToAction = defaultValues['call_to_action'] as String;
-
-  String get callToAction => _callToAction;
-
   Attending _attending = Attending.unknown;
-  StreamSubscription<DocumentSnapshot>? _attendingSubscription;
+  StreamSubscription<DocumentSnapshot>? _databaseSubscription;
 
   Attending get attending => _attending;
 
@@ -80,8 +48,10 @@ class ApplicationState extends ChangeNotifier {
   Future<void> init() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    if (kDebugMode) {
+      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    }
     FirebaseUIAuth.configureProviders([
       EmailAuthProvider(),
     ]);
@@ -91,7 +61,7 @@ class ApplicationState extends ChangeNotifier {
         .where('attending', isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
-      _attendees = snapshot.docs.length;
+      // _attendees = snapshot.docs.length;
       notifyListeners();
     });
 
@@ -99,23 +69,23 @@ class ApplicationState extends ChangeNotifier {
       if (user != null) {
         _loggedIn = true;
         _emailVerified = user.emailVerified;
-        _guestBookSubscription = FirebaseFirestore.instance
-            .collection('guestbook')
-            .orderBy('timestamp', descending: true)
-            .snapshots()
-            .listen((snapshot) {
-          _guestBookMessages = [];
-          for (final document in snapshot.docs) {
-            _guestBookMessages.add(
-              GuestBookMessage(
-                name: document.data()['name'] as String,
-                message: document.data()['text'] as String,
-              ),
-            );
-          }
-          notifyListeners();
-        });
-        _attendingSubscription = FirebaseFirestore.instance
+        // _guestBookSubscription = FirebaseFirestore.instance
+        //     .collection('guestbook')
+        //     .orderBy('timestamp', descending: true)
+        //     .snapshots()
+        //     .listen((snapshot) {
+        //   _guestBookMessages = [];
+        //   for (final document in snapshot.docs) {
+        //     _guestBookMessages.add(
+        //       GuestBookMessage(
+        //         name: document.data()['name'] as String,
+        //         message: document.data()['text'] as String,
+        //       ),
+        //     );
+        //   }
+        //   notifyListeners();
+        // });
+        _databaseSubscription = FirebaseFirestore.instance
             .collection('attendees')
             .doc(user.uid)
             .snapshots()
@@ -134,9 +104,7 @@ class ApplicationState extends ChangeNotifier {
       } else {
         _loggedIn = false;
         _emailVerified = false;
-        _guestBookMessages = [];
-        _guestBookSubscription?.cancel();
-        _attendingSubscription?.cancel();
+        _databaseSubscription?.cancel();
       }
       notifyListeners();
     });
@@ -152,7 +120,7 @@ class ApplicationState extends ChangeNotifier {
     await currentUser.reload();
   }
 
-  Future<DocumentReference> addMessageToGuestBook(String message) {
+  Future<DocumentReference> addMessageToDatabase(String message) {
     if (!_loggedIn) {
       throw Exception('Must be logged in');
     }

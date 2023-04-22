@@ -115,17 +115,43 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Outlined Button Style
+    final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
+      foregroundColor: Colors.black87,
+      minimumSize: const Size(88, 36),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+    ).copyWith(
+      side: MaterialStateProperty.resolveWith<BorderSide>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.pressed)) {
+            return BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+              width: 1,
+            );
+          }
+          return const BorderSide(); // Defer to the widget's default.
+        },
+      ),
+    );
     return MaterialApp.router(
       title: 'Beasts and Bards',
       theme: ThemeData(
-        buttonTheme: Theme.of(context).buttonTheme.copyWith(
-              highlightColor: Colors.red,
-            ),
+        outlinedButtonTheme: OutlinedButtonThemeData(style: outlineButtonStyle),
         primarySwatch: Colors.red,
-        // textTheme: GoogleFonts.robotoTextTheme(
-        //   Theme.of(context).textTheme,
-        // ),
+        primaryColor: Colors.red,
         fontFamily: 'Iceberg',
+        // textTheme: const TextTheme(
+        //     displayLarge:
+        //         TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+        //     titleLarge: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+        //     labelLarge: TextStyle(
+        //         fontSize: 36.0,
+        //         fontStyle: FontStyle.italic,
+        //         color: Colors.black),
+        //     bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Iceberg')),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
       ),

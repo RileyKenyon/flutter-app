@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
-import 'guest_book.dart';
 import 'src/authentication.dart';
 import 'src/widgets.dart';
 import 'yes_no_selection.dart';
@@ -22,63 +21,64 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Center(child: Text('Beasts and Bards')),
       ),
-      body: ListView(
-        children: <Widget>[
-          Image.asset('assets/d20.png'),
-          const SizedBox(height: 8),
-          Consumer<ApplicationState>(
-            builder: (context, appState, _) =>
-                IconAndDetail(Icons.calendar_today, appState.eventDate),
-          ),
-          const IconAndDetail(Icons.shield, 'San Francisco'),
-          Consumer<ApplicationState>(
-            builder: (context, appState, _) => AuthFunc(
-              loggedIn: appState.loggedIn,
-              signOut: () {
-                FirebaseAuth.instance.signOut();
-              },
-              enableFreeSwag: appState.enableFreeSwag,
+      body: Center(
+        child: ListView(
+          children: <Widget>[
+            Image.asset('assets/title.gif'),
+            const SizedBox(height: 8),
+            // Consumer<ApplicationState>(
+            //   builder: (context, appState, _) =>
+            //       IconAndDetail(Icons.calendar_today, appState.eventDate),
+            // ),
+            // const IconAndDetail(Icons.shield, 'San Francisco'),
+            Consumer<ApplicationState>(
+              builder: (context, appState, _) => AuthFunc(
+                loggedIn: appState.loggedIn,
+                signOut: () {
+                  FirebaseAuth.instance.signOut();
+                },
+              ),
             ),
-          ),
-          const Divider(
-            height: 8,
-            thickness: 1,
-            indent: 8,
-            endIndent: 8,
-            color: Colors.grey,
-          ),
-          const Header("What we'll be doing"),
-          Consumer<ApplicationState>(
-            builder: (context, appState, _) => Paragraph(
-              appState.callToAction,
-            ),
-          ),
-          Consumer<ApplicationState>(
-            builder: (context, appState, _) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (appState.attendees >= 2)
-                  Paragraph('${appState.attendees} people going')
-                else if (appState.attendees == 1)
-                  const Paragraph('1 person going')
-                else
-                  const Paragraph('No one going'),
-                if (appState.loggedIn) ...[
-                  YesNoSelection(
-                    state: appState.attending,
-                    onSelection: (attending) => appState.attending = attending,
-                  ),
-                  const Header('Discussion'),
-                  GuestBook(
-                    addMessage: (message) =>
-                        appState.addMessageToGuestBook(message),
-                    messages: appState.guestBookMessages,
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
+            // const Divider(
+            //   height: 8,
+            //   thickness: 1,
+            //   indent: 8,
+            //   endIndent: 8,
+            //   color: Colors.grey,
+            // ),
+            // const Header("What we'll be doing"),
+            // Consumer<ApplicationState>(
+            //   builder: (context, appState, _) => Paragraph(
+            //     appState.callToAction,
+            //   ),
+            // ),
+            // Consumer<ApplicationState>(
+            //   builder: (context, appState, _) => Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       if (appState.attendees >= 2)
+            //         Paragraph('${appState.attendees} people going')
+            //       else if (appState.attendees == 1)
+            //         const Paragraph('1 person going')
+            //       else
+            //         const Paragraph('No one going'),
+            //       if (appState.loggedIn) ...[
+            //         YesNoSelection(
+            //           state: appState.attending,
+            //           onSelection: (attending) => appState.attending = attending,
+            //         ),
+            //         // const Header('Discussion'),
+            //         // GuestBook(
+            //         //   addMessage: (message) =>
+            //         //       appState.addMessageToDatabase(message),
+            //         //   messages: appState.guestBookMessages,
+            //         // ),
+            //       ],
+            //     ],
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }

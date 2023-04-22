@@ -12,44 +12,34 @@ class AuthFunc extends StatelessWidget {
     super.key,
     required this.loggedIn,
     required this.signOut,
-    this.enableFreeSwag = false,
   });
 
   final bool loggedIn;
   final void Function() signOut;
-  final bool enableFreeSwag;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 24, bottom: 8),
+          padding: const EdgeInsets.only(bottom: 16),
           child: StyledButton(
               onPressed: () {
                 !loggedIn ? context.push('/sign-in') : signOut();
               },
-              child: !loggedIn ? const Text('RSVP') : const Text('Logout')),
+              child: !loggedIn
+                  ? const Text('Start Your Adventure')
+                  : const Text('Logout')),
         ),
         Visibility(
             visible: loggedIn,
             child: Padding(
-              padding: const EdgeInsets.only(left: 24, bottom: 8),
+              padding: const EdgeInsets.only(bottom: 16),
               child: StyledButton(
                   onPressed: () {
                     context.push('/profile');
                   },
                   child: const Text('Profile')),
-            )),
-        Visibility(
-            visible: enableFreeSwag,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24, bottom: 8),
-              child: StyledButton(
-                  onPressed: () {
-                    throw Exception('free swag unimplemented');
-                  },
-                  child: const Text('Free swag!')),
             )),
       ],
     );
