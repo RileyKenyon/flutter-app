@@ -40,6 +40,7 @@ class IconAndDetail extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon),
             const SizedBox(width: 8),
