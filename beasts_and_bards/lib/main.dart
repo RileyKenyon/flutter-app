@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'home_page.dart';
 import 'dashboard_page.dart';
-import 'create_game_page.dart';
+import 'create_game_form.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -121,7 +121,7 @@ final _router = GoRouter(
             path: 'create-game',
             builder: (context, state) {
               return Consumer<ApplicationState>(
-                builder: (context, appState, _) => CreateGamePage(
+                builder: (context, appState, _) => CreateGameForm(
                   key: ValueKey(appState.loggedIn),
                   appState: appState,
                 ),
