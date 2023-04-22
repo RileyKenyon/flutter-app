@@ -41,6 +41,16 @@ class AuthFunc extends StatelessWidget {
                   },
                   child: const Text('Profile')),
             )),
+        Visibility(
+            visible: loggedIn,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: StyledButton(
+                  onPressed: () {
+                    context.pushReplacement('/dashboard');
+                  },
+                  child: const Text('Dashboard')),
+            )),
       ],
     );
   }

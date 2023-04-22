@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'app_state.dart';
 import 'home_page.dart';
+import 'dashboard_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +59,7 @@ final _router = GoRouter(
                               'Please check your email to verify your email address'));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
-                    context.pushReplacement('/');
+                    context.replace('/');
                   }
                 })),
               ],
@@ -105,6 +106,16 @@ final _router = GoRouter(
             );
           },
         ),
+        GoRoute(
+          path: 'dashboard',
+          builder: (context, state) {
+            return Consumer<ApplicationState>(
+              builder: (context, appState, _) => DashboardPage(
+                key: ValueKey(appState.loggedIn),
+              ),
+            );
+          },
+        )
       ],
     ),
   ],
