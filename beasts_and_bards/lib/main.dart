@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'home_page.dart';
 import 'dashboard_page.dart';
+import 'create_game_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -115,7 +116,17 @@ final _router = GoRouter(
               ),
             );
           },
-        )
+        ),
+        GoRoute(
+            path: 'create-game',
+            builder: (context, state) {
+              return Consumer<ApplicationState>(
+                builder: (context, appState, _) => CreateGamePage(
+                  key: ValueKey(appState.loggedIn),
+                  appState: appState,
+                ),
+              );
+            }),
       ],
     ),
   ],
@@ -129,6 +140,7 @@ class App extends StatelessWidget {
     // Outlined Button Style
     final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
       foregroundColor: Colors.black87,
+      backgroundColor: Colors.red,
       minimumSize: const Size(88, 36),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       shape: const RoundedRectangleBorder(
@@ -151,8 +163,6 @@ class App extends StatelessWidget {
       title: 'Beasts and Bards',
       theme: ThemeData(
         outlinedButtonTheme: OutlinedButtonThemeData(style: outlineButtonStyle),
-        primarySwatch: Colors.red,
-        primaryColor: Colors.red,
         fontFamily: 'Iceberg',
         // textTheme: const TextTheme(
         //     displayLarge:
@@ -165,6 +175,7 @@ class App extends StatelessWidget {
         //     bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Iceberg')),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
+        colorSchemeSeed: Colors.red,
       ),
       routerConfig: _router,
     );

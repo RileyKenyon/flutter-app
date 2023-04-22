@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'src/authentication.dart';
 import 'src/widgets.dart';
-import 'yes_no_selection.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -15,26 +14,34 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text("Drawer Header"),
-            ),
-            ListTile(
-              title: const Text('Go Home'),
-              onTap: () => (context.go('/')),
-            )
-          ],
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(color: Colors.red),
+                child: Image(image: AssetImage('assets/d20.png')),
+              ),
+              ListTile(
+                title: const Text('Go Home'),
+                onTap: () => (context.go('/')),
+              )
+            ],
+          ),
         ),
-      ),
-      appBar: AppBar(title: const Text("Dashboard")),
-      body: ListView(children: <Widget>[
-        const Text("Hello!"),
-        Image.asset('assets/d20.png')
-      ]),
-    );
+        appBar: AppBar(title: const Text("Dashboard")),
+        body: ListView(children: <Widget>[
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: Text('Welcome!',
+                  style: Theme.of(context).textTheme.titleLarge)),
+        ]),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+          shape: const CircleBorder(),
+          onPressed: () => context.push('/create-game'),
+          child: const Icon(Icons.add),
+        ));
   }
 }

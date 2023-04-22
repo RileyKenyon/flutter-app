@@ -86,12 +86,12 @@ class ApplicationState extends ChangeNotifier {
         //   notifyListeners();
         // });
         _databaseSubscription = FirebaseFirestore.instance
-            .collection('attendees')
+            .collection('games')
             .doc(user.uid)
             .snapshots()
             .listen((snapshot) {
           if (snapshot.data() != null) {
-            if (snapshot.data()!['attending'] as bool) {
+            if (snapshot.data()!['game'] as bool) {
               _attending = Attending.yes;
             } else {
               _attending = Attending.no;
@@ -125,9 +125,7 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
-    return FirebaseFirestore.instance
-        .collection('guestbook')
-        .add(<String, dynamic>{
+    return FirebaseFirestore.instance.collection('games').add(<String, dynamic>{
       'text': message,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'name': FirebaseAuth.instance.currentUser!.displayName,
