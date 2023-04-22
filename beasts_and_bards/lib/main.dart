@@ -113,6 +113,7 @@ final _router = GoRouter(
             return Consumer<ApplicationState>(
               builder: (context, appState, _) => DashboardPage(
                 key: ValueKey(appState.loggedIn),
+                friends: appState.friendsList,
               ),
             );
           },

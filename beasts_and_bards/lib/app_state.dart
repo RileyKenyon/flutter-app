@@ -11,8 +11,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'friend.dart';
 import 'firebase_options.dart';
+import 'dart:io';
 
 enum Attending { yes, no, unknown }
 
@@ -31,7 +32,9 @@ class ApplicationState extends ChangeNotifier {
 
   Attending _attending = Attending.unknown;
   StreamSubscription<DocumentSnapshot>? _databaseSubscription;
-
+  StreamSubscription<QuerySnapshot>? _friendsListSubscription;
+  List<Friend> _friendsList = [];
+  List<Friend> get friendsList => _friendsList;
   Attending get attending => _attending;
 
   set attending(Attending attending) {
@@ -48,43 +51,60 @@ class ApplicationState extends ChangeNotifier {
   Future<void> init() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    if (kDebugMode) {
-      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-    }
+    // if (kDebugMode) {
+    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    // }
     FirebaseUIAuth.configureProviders([
       EmailAuthProvider(),
     ]);
 
-    FirebaseFirestore.instance
-        .collection('attendees')
-        .where('attending', isEqualTo: true)
-        .snapshots()
-        .listen((snapshot) {
-      // _attendees = snapshot.docs.length;
-      notifyListeners();
-    });
+    if (loggedIn && FirebaseAuth.instance.currentUser != null) {
+      _friendsListSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('friendslist')
+          .snapshots()
+          .listen((snapshot) {
+        _friendsList = [];
+        stdout.writeln('Executing line');
+        for (final friend in snapshot.docs) {
+          if (friend.data()['name'] != null) {
+            _friendsList.add(
+              Friend(
+                name: friend.data()['name'] as String,
+                message: "",
+              ),
+            );
+          }
+        }
+        notifyListeners();
+      });
+    }
 
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
         _emailVerified = user.emailVerified;
-        // _guestBookSubscription = FirebaseFirestore.instance
-        //     .collection('guestbook')
-        //     .orderBy('timestamp', descending: true)
-        //     .snapshots()
-        //     .listen((snapshot) {
-        //   _guestBookMessages = [];
-        //   for (final document in snapshot.docs) {
-        //     _guestBookMessages.add(
-        //       GuestBookMessage(
-        //         name: document.data()['name'] as String,
-        //         message: document.data()['text'] as String,
-        //       ),
-        //     );
-        //   }
-        //   notifyListeners();
-        // });
+        _friendsListSubscription = FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('friendslist')
+            .snapshots()
+            .listen((snapshot) {
+          _friendsList = [];
+          for (final friend in snapshot.docs) {
+            if (friend.data()['name'] != null) {
+              _friendsList.add(
+                Friend(
+                  name: friend.data()['name'] as String,
+                  message: "",
+                ),
+              );
+            }
+          }
+          notifyListeners();
+        });
         _databaseSubscription = FirebaseFirestore.instance
             .collection('games')
             .doc(user.uid)
