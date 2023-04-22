@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'app_state.dart';
 import 'src/widgets.dart';
+import 'game.dart';
 
 class CreateGameForm extends StatefulWidget {
   const CreateGameForm({super.key, required this.appState});
@@ -18,6 +19,7 @@ class _CreateGameFormState extends State<CreateGameForm> {
   final textController = TextEditingController();
   final playerTextController = TextEditingController();
   var searchFriendList = <Friend>[];
+  var partyList = <Friend>[];
 
   @override
   void dispose() {
@@ -28,8 +30,9 @@ class _CreateGameFormState extends State<CreateGameForm> {
   void filterSearchResults(String query) {
     setState(() {
       searchFriendList = widget.appState.friendsList
-          .where(
-              (item) => item.name.toLowerCase().contains(query.toLowerCase()))
+          .where((item) =>
+              item.name.toLowerCase().contains(query.toLowerCase()) &&
+              !partyList.contains(item))
           .toList();
     });
   }
@@ -84,7 +87,9 @@ class _CreateGameFormState extends State<CreateGameForm> {
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(searchFriendList[index].name),
-                      onTap: () {},
+                      onTap: () {
+                        partyList.add(searchFriendList[index]);
+                      },
                     );
                   },
                 ),
@@ -94,7 +99,9 @@ class _CreateGameFormState extends State<CreateGameForm> {
                 child:
                     const IconAndDetail(Icons.insert_emoticon_sharp, "Submit"),
                 onPressed: () => {
-                      widget.appState.addMessageToDatabase(textController.text),
+                      widget.appState.addGameToDatabase(
+                        Game(name: textController.text, players: partyList),
+                      ),
                       context.pushReplacement('/dashboard'),
                     }),
           ],

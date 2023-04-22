@@ -12,6 +12,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'friend.dart';
+import 'game.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 
@@ -147,6 +148,25 @@ class ApplicationState extends ChangeNotifier {
 
     return FirebaseFirestore.instance.collection('games').add(<String, dynamic>{
       'text': message,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'name': FirebaseAuth.instance.currentUser!.displayName,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+    });
+  }
+
+  Future<DocumentReference> addGameToDatabase(Game newgame) {
+    if (!_loggedIn) {
+      throw Exception('Must be logged in');
+    }
+
+    List<String> playerNames = [];
+    for (final player in newgame.players) {
+      playerNames.add(player.name);
+    }
+
+    return FirebaseFirestore.instance.collection('games').add(<String, dynamic>{
+      'text': newgame.name,
+      'players': playerNames,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'name': FirebaseAuth.instance.currentUser!.displayName,
       'userId': FirebaseAuth.instance.currentUser!.uid,
