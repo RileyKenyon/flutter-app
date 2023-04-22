@@ -40,15 +40,15 @@ class _CreateGameFormState extends State<CreateGameForm> {
                   labelText: "Party Title"),
               controller: textController,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: Text("Players:",
-                  style: Theme.of(context).textTheme.titleMedium),
-            ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: TextField(
-                decoration: InputDecoration(hintText: "Names"),
+                decoration: InputDecoration(
+                  prefixIcon: Text("Players: "),
+                  prefixIconConstraints:
+                      BoxConstraints(minWidth: 0, minHeight: 0),
+                  hintText: "Names",
+                ),
               ),
             ),
             Visibility(
@@ -65,6 +65,7 @@ class _CreateGameFormState extends State<CreateGameForm> {
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(widget.appState.friendsList[index].name),
+                      onTap: () {},
                     );
                   },
                 ),
