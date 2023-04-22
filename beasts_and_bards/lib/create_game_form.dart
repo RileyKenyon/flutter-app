@@ -1,3 +1,4 @@
+import 'package:beasts_and_bards/friend.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'app_state.dart';
@@ -15,11 +16,22 @@ class CreateGameForm extends StatefulWidget {
 
 class _CreateGameFormState extends State<CreateGameForm> {
   final textController = TextEditingController();
+  final playerTextController = TextEditingController();
+  var searchFriendList = <Friend>[];
 
   @override
   void dispose() {
     textController.dispose();
     super.dispose();
+  }
+
+  void filterSearchResults(String query) {
+    setState(() {
+      searchFriendList = widget.appState.friendsList
+          .where(
+              (item) => item.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
@@ -30,8 +42,11 @@ class _CreateGameFormState extends State<CreateGameForm> {
         padding: const EdgeInsets.all(10.0),
         child: ListView(
           children: <Widget>[
-            Text('Create a New Game!',
-                style: Theme.of(context).textTheme.titleLarge),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: Text('Create a New Game!',
+                  style: Theme.of(context).textTheme.titleLarge),
+            ),
             TextFormField(
               decoration: const InputDecoration(
                   icon: Icon(Icons.shield),
@@ -40,15 +55,19 @@ class _CreateGameFormState extends State<CreateGameForm> {
                   labelText: "Party Title"),
               controller: textController,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixIcon: Text("Players: "),
                   prefixIconConstraints:
                       BoxConstraints(minWidth: 0, minHeight: 0),
                   hintText: "Names",
                 ),
+                controller: playerTextController,
+                onChanged: (value) {
+                  filterSearchResults(value);
+                },
               ),
             ),
             Visibility(
@@ -56,15 +75,15 @@ class _CreateGameFormState extends State<CreateGameForm> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 300),
                 child: ListView.builder(
-                  itemCount: widget.appState.friendsList.length,
+                  itemCount: searchFriendList.length,
                   prototypeItem: ListTile(
-                    title: Text(widget.appState.friendsList.isNotEmpty
-                        ? widget.appState.friendsList.first.name
+                    title: Text(searchFriendList.isNotEmpty
+                        ? searchFriendList.first.name
                         : "None"),
                   ),
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(widget.appState.friendsList[index].name),
+                      title: Text(searchFriendList[index].name),
                       onTap: () {},
                     );
                   },
