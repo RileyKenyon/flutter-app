@@ -1,4 +1,6 @@
 import 'package:beasts_and_bards/friend.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'app_state.dart';
@@ -24,6 +26,7 @@ class _CreateGameFormState extends State<CreateGameForm> {
   @override
   void dispose() {
     textController.dispose();
+    playerTextController.dispose();
     super.dispose();
   }
 
@@ -98,12 +101,19 @@ class _CreateGameFormState extends State<CreateGameForm> {
             OutlinedButton(
                 child:
                     const IconAndDetail(Icons.insert_emoticon_sharp, "Submit"),
-                onPressed: () => {
-                      widget.appState.addGameToDatabase(
-                        Game(name: textController.text, players: partyList),
-                      ),
-                      context.pushReplacement('/dashboard'),
-                    }),
+                onPressed: () {
+                  final String? username =
+                      FirebaseAuth.instance.currentUser?.displayName;
+                  if (username != null) {
+                    widget.appState.addGameToDatabase(
+                      Game(
+                          name: textController.text,
+                          players: partyList,
+                          dm: username),
+                    );
+                    context.pushReplacement('/dashboard');
+                  }
+                }),
           ],
         ),
       ),

@@ -9,10 +9,19 @@ import 'app_state.dart';
 import 'src/authentication.dart';
 import 'src/widgets.dart';
 
-class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key, required this.friends});
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key, required this.appState});
+  final ApplicationState appState;
 
-  final List<Friend> friends;
+  @override
+  State<DashboardPage> createState() => _DashboardPage();
+}
+
+class _DashboardPage extends State<DashboardPage> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +47,26 @@ class DashboardPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child:
                 Text('Welcome!', style: Theme.of(context).textTheme.titleLarge),
+          ),
+          Visibility(
+            visible: widget.appState.gameList.isNotEmpty,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 300),
+              child: ListView.builder(
+                itemCount: widget.appState.gameList.length,
+                prototypeItem: ListTile(
+                  title: Text(widget.appState.gameList.isNotEmpty
+                      ? widget.appState.gameList.first.name
+                      : "None"),
+                ),
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(widget.appState.gameList[index].name),
+                    onTap: () {},
+                  );
+                },
+              ),
+            ),
           ),
         ]),
         floatingActionButton: FloatingActionButton(

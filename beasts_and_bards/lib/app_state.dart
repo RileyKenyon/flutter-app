@@ -16,8 +16,6 @@ import 'game.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 
-enum Attending { yes, no, unknown }
-
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
     init();
@@ -31,23 +29,14 @@ class ApplicationState extends ChangeNotifier {
 
   bool get emailVerified => _emailVerified;
 
-  Attending _attending = Attending.unknown;
-  StreamSubscription<DocumentSnapshot>? _databaseSubscription;
+  StreamSubscription<QuerySnapshot>? _databaseSubscription;
   StreamSubscription<QuerySnapshot>? _friendsListSubscription;
   List<Friend> _friendsList = [];
   List<Friend> get friendsList => _friendsList;
-  Attending get attending => _attending;
 
-  set attending(Attending attending) {
-    final userDoc = FirebaseFirestore.instance
-        .collection('attendees')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-    if (attending == Attending.yes) {
-      userDoc.set(<String, dynamic>{'attending': true});
-    } else {
-      userDoc.set(<String, dynamic>{'attending': false});
-    }
-  }
+  // Add game list for user
+  List<Game> _gameList = [];
+  List<Game> get gameList => _gameList;
 
   Future<void> init() async {
     await Firebase.initializeApp(
@@ -68,7 +57,6 @@ class ApplicationState extends ChangeNotifier {
           .snapshots()
           .listen((snapshot) {
         _friendsList = [];
-        stdout.writeln('Executing line');
         for (final friend in snapshot.docs) {
           if (friend.data()['name'] != null) {
             _friendsList.add(
@@ -79,6 +67,23 @@ class ApplicationState extends ChangeNotifier {
             );
           }
         }
+        notifyListeners();
+      });
+      _databaseSubscription = FirebaseFirestore.instance
+          .collection('games')
+          .snapshots()
+          .listen((snapshot) {
+        _gameList = [];
+        for (final doc in snapshot.docs) {
+          List<Friend> players = [];
+          for (final f in doc.data()['players']) {
+            players.add(Friend(name: f, message: ""));
+          }
+          _gameList
+              // .add(Game(name: doc['text'], players: players, dm: doc['name']));
+              .add(Game(name: "abcd", players: players, dm: "doc"));
+        }
+        stdout.writeln('Number of games ${snapshot.docs.length}');
         notifyListeners();
       });
     }
@@ -108,18 +113,23 @@ class ApplicationState extends ChangeNotifier {
         });
         _databaseSubscription = FirebaseFirestore.instance
             .collection('games')
-            .doc(user.uid)
             .snapshots()
             .listen((snapshot) {
-          if (snapshot.data() != null) {
-            if (snapshot.data()!['game'] as bool) {
-              _attending = Attending.yes;
-            } else {
-              _attending = Attending.no;
+          _gameList = [];
+          for (final doc in snapshot.docs) {
+            List<Friend> players = [];
+            if (doc.data()['players'] != null) {
+              List<String> playerNames = List.from(doc.data()['players']);
+              for (final f in playerNames) {
+                players.add(Friend(name: f, message: ""));
+              }
             }
-          } else {
-            _attending = Attending.unknown;
+            _gameList.add(Game(
+                name: doc.data()['text'],
+                players: players,
+                dm: doc.data()['name']));
           }
+          stdout.writeln('Number of games ${snapshot.docs.length}');
           notifyListeners();
         });
       } else {
