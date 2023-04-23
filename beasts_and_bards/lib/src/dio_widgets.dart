@@ -30,7 +30,12 @@ class _DndManager extends State<DndManager> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(snapshot.data?.data['results'][index]['name']),
-                  onTap: () => (context.push('/monster-detail')),
+                  onTap: () => (context.push('/monster-detail',
+                      extra: Monster(
+                          url: snapshot.data?.data['results'][index]['name']
+                              as String,
+                          name: snapshot.data?.data['results'][index]['name']
+                              as String))),
                 );
               },
             );
@@ -42,6 +47,12 @@ class _DndManager extends State<DndManager> {
       ),
     );
   }
+}
+
+class Monster {
+  Monster({required this.url, required this.name});
+  final String name;
+  final String url;
 }
 
 Future<Response<dynamic>> getDndApiList(String query) async {
