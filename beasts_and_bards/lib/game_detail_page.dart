@@ -3,6 +3,7 @@ import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'src/dio_widgets.dart';
 
 class GameDetailPage extends StatefulWidget {
   const GameDetailPage({super.key, required this.appState});
@@ -18,7 +19,7 @@ class _GameDetailPage extends State<GameDetailPage> {
   static const List<Widget> _widgets = <Widget>[
     Text('Character'),
     Text('Inventory'),
-    Text('Monters'),
+    DndManager(),
     MapWidget(title: 'Map')
   ];
 
