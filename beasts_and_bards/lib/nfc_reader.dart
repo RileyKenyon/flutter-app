@@ -7,31 +7,79 @@ import 'package:nfc_manager/nfc_manager.dart';
 // For logging
 import 'dart:developer';
 
-class NfcReader extends ChangeNotifier {
+class NfcReader extends StatefulWidget {
+  @override
+  State<NfcReader> createState() => _NfcReader();
+}
+
+class _NfcReader extends State<NfcReader> {
   ValueNotifier<dynamic> result = ValueNotifier(null);
-  NfcReader() {
-    init();
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
-  Future<void> init() async {
-    bool isAvailable = await NfcManager.instance.isAvailable();
-    NfcManager.instance.startSession(
-      onDiscovered: (NfcTag tag) async {},
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('NfcManager Plugin Example')),
+      body: SafeArea(
+        child: FutureBuilder<bool>(
+          future: NfcManager.instance.isAvailable(),
+          builder: (context, ss) => ss.data != true
+              ? Center(child: Text('NfcManager.isAvailable(): ${ss.data}'))
+              : Flex(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  direction: Axis.vertical,
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                        margin: const EdgeInsets.all(4),
+                        constraints: const BoxConstraints.expand(),
+                        decoration: BoxDecoration(border: Border.all()),
+                        child: SingleChildScrollView(
+                          child: ValueListenableBuilder<dynamic>(
+                            valueListenable: result,
+                            builder: (context, value, _) =>
+                                Text('${value ?? ''}'),
+                          ),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                        onPressed: _tagRead, child: const Text('Tag Read')),
+                  ],
+                ),
+        ),
+      ),
     );
   }
 
   void _tagRead() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      // Do something with an NfcTag instance.
-      int data = tag.hashCode;
-      log('NFC payload: $data');
       result.value = tag.data;
       NfcManager.instance.stopSession();
     });
   }
-
-  void exit() {
-    // Stop Session
-    NfcManager.instance.stopSession();
-  }
 }
+
+
+
+
+
+  // Future<void> init() async {
+  //   bool isAvailable = await NfcManager.instance.isAvailable();
+  //   NfcManager.instance.startSession(
+  //     onDiscovered: (NfcTag tag) async {},
+  //   );
+  // }
+
+
+//   void exit() {
+//     // Stop Session
+//     NfcManager.instance.stopSession();
+//   }
+// }
+  // }
