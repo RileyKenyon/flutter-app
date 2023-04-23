@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/auth.dart';
 
 class DndManager extends StatefulWidget {
   const DndManager({super.key});
@@ -21,9 +22,17 @@ class _DndManager extends State<DndManager> {
           if (snapshot.hasData &&
               snapshot.data != null &&
               snapshot.data?.statusCode == 200) {
-            child = Text('Result: ${snapshot.data}');
+            // child = Text('Result: ${snapshot.data}');
+            child = ListView.builder(
+              itemCount: snapshot.data?.data['count'],
+              prototypeItem: ListTile(title: Text("Prototype")),
+              itemBuilder: (context, index) {
+                return ListTile(
+                    title: Text(snapshot.data?.data['results'][index]['name']));
+              },
+            );
           } else {
-            child = const Text('No result');
+            child = const Icon(Icons.refresh);
           }
           return Center(child: child);
         },
