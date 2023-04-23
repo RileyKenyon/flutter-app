@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:beasts_and_bards/friend.dart';
+import 'package:beasts_and_bards/game.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:flutter/material.dart';
@@ -54,16 +57,14 @@ class _DashboardPage extends State<DashboardPage> {
               constraints: const BoxConstraints(maxHeight: 300),
               child: ListView.builder(
                 itemCount: widget.appState.gameList.length,
-                prototypeItem: ListTile(
-                  title: Text(widget.appState.gameList.isNotEmpty
-                      ? widget.appState.gameList.first.name
-                      : "None"),
+                prototypeItem: DashboardListItem(
+                  game: Game(name: "None", players: []),
+                  onTap: () {},
                 ),
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(widget.appState.gameList[index].name),
-                    onTap: () => {context.push('/game-detail')},
-                  );
+                  return DashboardListItem(
+                      game: widget.appState.gameList[index],
+                      onTap: () => {context.push('/game-detail')});
                 },
               ),
             ),

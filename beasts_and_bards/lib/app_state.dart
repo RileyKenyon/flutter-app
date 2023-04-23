@@ -79,9 +79,8 @@ class ApplicationState extends ChangeNotifier {
           for (final f in doc.data()['players']) {
             players.add(Friend(name: f, message: ""));
           }
-          _gameList
-              // .add(Game(name: doc['text'], players: players, dm: doc['name']));
-              .add(Game(name: "abcd", players: players, dm: "doc"));
+          _gameList.add(
+              Game(name: "abcd", players: players, dm: "doc", active: false));
         }
         stdout.writeln('Number of games ${snapshot.docs.length}');
         notifyListeners();
@@ -124,10 +123,14 @@ class ApplicationState extends ChangeNotifier {
                 players.add(Friend(name: f, message: ""));
               }
             }
-            _gameList.add(Game(
+            _gameList.add(
+              Game(
                 name: doc.data()['text'],
                 players: players,
-                dm: doc.data()['name']));
+                dm: doc.data()['name'],
+                active: false,
+              ),
+            );
           }
           stdout.writeln('Number of games ${snapshot.docs.length}');
           notifyListeners();

@@ -109,7 +109,8 @@ class _CreateGameFormState extends State<CreateGameForm> {
                       Game(
                           name: textController.text,
                           players: partyList,
-                          dm: username),
+                          dm: username,
+                          active: false),
                     );
                     context.pushReplacement('/dashboard');
                   }

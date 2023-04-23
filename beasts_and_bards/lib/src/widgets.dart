@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:beasts_and_bards/app_state.dart';
 import 'package:flutter/material.dart';
+import 'package:beasts_and_bards/game.dart';
 
 class Header extends StatelessWidget {
   const Header(this.heading, {super.key});
@@ -64,5 +66,29 @@ class StyledButton extends StatelessWidget {
         //     OutlinedButton.styleFrom(side: const BorderSide(color: Colors.red)),
         onPressed: onPressed,
         child: child,
+      );
+}
+
+class DashboardListItem extends StatelessWidget {
+  const DashboardListItem({required this.game, required this.onTap, super.key});
+  final Game game;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        child: ListTile(
+          leading: game.active
+              ? const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                )
+              : const Icon(
+                  Icons.do_not_disturb,
+                  color: Colors.red,
+                ),
+          title: Text(game.name),
+          onTap: onTap,
+        ),
       );
 }
