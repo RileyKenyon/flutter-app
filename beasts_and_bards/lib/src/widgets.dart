@@ -92,3 +92,90 @@ class DashboardListItem extends StatelessWidget {
         ),
       );
 }
+
+class MapWidget extends StatefulWidget {
+  const MapWidget({super.key, required this.title});
+  final String title;
+
+  @override
+  State<MapWidget> createState() => _MapWidget();
+}
+
+class _MapWidget extends State<MapWidget> {
+  final double _mapWidth = 1000.0;
+  final double _mapHeight = 1000.0;
+  final double _cameraHeight = 500.0;
+  final double _cameraWidth = 300.0;
+  double _leftPos = 0.0; //the offset of the map relative to the camera
+  double _topPos = 0.0; //the offset of the map relative to the camera
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var camera = GestureDetector(
+      onPanUpdate: (details) {
+        var topPos = _topPos + details.delta.dy;
+        var leftPos = _leftPos + details.delta.dx;
+        topPos = _boundaryRule(topPos, _mapHeight, _cameraHeight);
+        leftPos = _boundaryRule(leftPos, _mapWidth, _cameraWidth);
+        //set the state
+        setState(() {
+          _topPos = topPos;
+          _leftPos = leftPos;
+        });
+      },
+      child: Container(
+        height: 500,
+        width: 300,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15.0),
+          border: Border.all(
+              color: Colors.grey, style: BorderStyle.solid, width: 0.8),
+        ),
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              left: _leftPos + 0,
+              top: _topPos + 0,
+              child: Container(
+                width: 30,
+                height: 30,
+                color: Colors.black,
+              ),
+            ),
+            Positioned(
+              left: _leftPos + 900,
+              top: _topPos + 900,
+              child: Container(
+                width: 100,
+                height: 100,
+                color: Colors.red,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+
+    return Scaffold(
+      body: Center(child: camera),
+    );
+  }
+
+  double _boundaryRule(position, mapLength, cameraLength) {
+    // this function will prevent the widget from moving if it reached the boundary
+    if (position < (cameraLength - mapLength)) {
+      position = cameraLength - mapLength;
+    }
+    if (position > 0) {
+      position = 0.0;
+    }
+
+    return position;
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:beasts_and_bards/app_state.dart';
+import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nfc_manager/nfc_manager.dart';
@@ -18,7 +19,7 @@ class _GameDetailPage extends State<GameDetailPage> {
     Text('Character'),
     Text('Inventory'),
     Text('Monters'),
-    Text('Map')
+    MapWidget(title: 'Map')
   ];
 
   @override
