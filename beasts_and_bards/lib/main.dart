@@ -139,6 +139,15 @@ final _router = GoRouter(
                 ),
               );
             }),
+        // GoRoute(
+        //     path: 'monster-detail',
+        //     builder: (context, state) {
+        //       return Consumer<ApplicationState>(
+        //         builder: (context, appState, _) => MonsterDetailPage(
+        //           appState: appState,
+        //         ),
+        //       );
+        //     }),
       ],
     ),
   ],
