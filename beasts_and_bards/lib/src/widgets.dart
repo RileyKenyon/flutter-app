@@ -104,8 +104,8 @@ class MapWidget extends StatefulWidget {
 class _MapWidget extends State<MapWidget> {
   final double _mapWidth = 1000.0;
   final double _mapHeight = 1000.0;
-  final double _cameraHeight = 500.0;
-  final double _cameraWidth = 300.0;
+  double _cameraHeight = 50.0;
+  double _cameraWidth = 50.0;
   double _leftPos = 0.0; //the offset of the map relative to the camera
   double _topPos = 0.0; //the offset of the map relative to the camera
 
@@ -116,7 +116,18 @@ class _MapWidget extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var camera = GestureDetector(
+    return Scaffold(
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        _cameraWidth = constraints.maxWidth;
+        _cameraHeight = constraints.maxHeight;
+        return Center(child: createMap());
+      }),
+    );
+  }
+
+  Widget createMap() {
+    return GestureDetector(
       onPanUpdate: (details) {
         var topPos = _topPos + details.delta.dy;
         var leftPos = _leftPos + details.delta.dx;
@@ -129,8 +140,8 @@ class _MapWidget extends State<MapWidget> {
         });
       },
       child: Container(
-        height: 500,
-        width: 300,
+        height: _cameraHeight,
+        width: _cameraWidth,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.0),
@@ -160,10 +171,6 @@ class _MapWidget extends State<MapWidget> {
           ],
         ),
       ),
-    );
-
-    return Scaffold(
-      body: Center(child: camera),
     );
   }
 
