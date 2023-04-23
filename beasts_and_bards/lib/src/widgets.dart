@@ -102,8 +102,8 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidget extends State<MapWidget> {
-  final double _mapWidth = 1000.0;
-  final double _mapHeight = 1000.0;
+  double _mapWidth = 1080.0;
+  double _mapHeight = 720.0;
   double _cameraHeight = 50.0;
   double _cameraWidth = 50.0;
   double _leftPos = 0.0; //the offset of the map relative to the camera
@@ -121,12 +121,18 @@ class _MapWidget extends State<MapWidget> {
           builder: (BuildContext context, BoxConstraints constraints) {
         _cameraWidth = constraints.maxWidth;
         _cameraHeight = constraints.maxHeight;
-        return Center(child: createMap());
+        final img = Image.asset(
+          'assets/Dragonar_world_map2.png',
+          width: _mapWidth,
+          height: _mapHeight,
+          fit: BoxFit.fill,
+        );
+        return Center(child: createMap(img));
       }),
     );
   }
 
-  Widget createMap() {
+  Widget createMap(Image img) {
     return GestureDetector(
       onPanUpdate: (details) {
         var topPos = _topPos + details.delta.dy;
@@ -154,20 +160,11 @@ class _MapWidget extends State<MapWidget> {
               left: _leftPos + 0,
               top: _topPos + 0,
               child: Container(
-                width: 30,
-                height: 30,
-                color: Colors.black,
+                width: img.width,
+                height: img.height,
+                child: img,
               ),
             ),
-            Positioned(
-              left: _leftPos + 900,
-              top: _topPos + 900,
-              child: Container(
-                width: 100,
-                height: 100,
-                color: Colors.red,
-              ),
-            )
           ],
         ),
       ),
