@@ -40,6 +40,10 @@ class _DashboardPage extends State<DashboardPage> {
               ListTile(
                 title: const Text('Go Home'),
                 onTap: () => (context.go('/')),
+              ),
+              ListTile(
+                title: const Text('Profile'),
+                onTap: () => (context.go('/profile')),
               )
             ],
           ),

@@ -55,6 +55,14 @@ class _GameDetailPage extends State<GameDetailPage> {
             ListTile(
               title: const Text('Go Home'),
               onTap: () => (context.go('/')),
+            ),
+            ListTile(
+              title: const Text('Dashboard'),
+              onTap: () => (context.go('/dashboard')),
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () => (context.go('/profile')),
             )
           ],
         ),
