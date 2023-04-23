@@ -62,7 +62,7 @@ class _DashboardPage extends State<DashboardPage> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(widget.appState.gameList[index].name),
-                    onTap: () {},
+                    onTap: () => {context.push('/game-detail')},
                   );
                 },
               ),

@@ -13,6 +13,7 @@ import 'app_state.dart';
 import 'home_page.dart';
 import 'dashboard_page.dart';
 import 'create_game_form.dart';
+import 'game_detail_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +28,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => NfcReader(),
+      builder: (context, state) => const HomePage(),
       routes: [
         GoRoute(
           path: 'sign-in',
@@ -125,6 +126,15 @@ final _router = GoRouter(
               return Consumer<ApplicationState>(
                 builder: (context, appState, _) => CreateGameForm(
                   key: ValueKey(appState.loggedIn),
+                  appState: appState,
+                ),
+              );
+            }),
+        GoRoute(
+            path: 'game-detail',
+            builder: (context, state) {
+              return Consumer<ApplicationState>(
+                builder: (context, appState, _) => GameDetailPage(
                   appState: appState,
                 ),
               );

@@ -60,6 +60,8 @@ class _NfcReader extends State<NfcReader> {
   void _tagRead() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       result.value = tag.data;
+      final ndefTag = Ndef.from(tag);
+      if (ndefTag != null) {}
       NfcManager.instance.stopSession();
     });
   }
