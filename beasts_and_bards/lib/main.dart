@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:beasts_and_bards/nfc_reader.dart';
+import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +15,7 @@ import 'home_page.dart';
 import 'dashboard_page.dart';
 import 'create_game_form.dart';
 import 'game_detail_page.dart';
+import 'src/dio_widgets.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -139,15 +141,19 @@ final _router = GoRouter(
                 ),
               );
             }),
-        // GoRoute(
-        //     path: 'monster-detail',
-        //     builder: (context, state) {
-        //       return Consumer<ApplicationState>(
-        //         builder: (context, appState, _) => MonsterDetailPage(
-        //           appState: appState,
-        //         ),
-        //       );
-        //     }),
+        GoRoute(
+            path: 'monster-detail',
+            builder: (context, state) {
+              return Consumer<ApplicationState>(
+                builder: (context, appState, _) => MonsterDetailsPage(
+                  monster: state.extra as Monster,
+                  // monster: Monster(
+                  //     imageUrl: "",
+                  //     name: "Aboleth",
+                  //     url: "/api/monsters/aboleth"),
+                ),
+              );
+            }),
       ],
     ),
   ],

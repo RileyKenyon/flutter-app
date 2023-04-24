@@ -5,6 +5,7 @@
 import 'package:beasts_and_bards/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:beasts_and_bards/game.dart';
+import 'package:beasts_and_bards/src/dio_widgets.dart';
 
 class Header extends StatelessWidget {
   const Header(this.heading, {super.key});
@@ -182,4 +183,19 @@ class _MapWidget extends State<MapWidget> {
 
     return position;
   }
+}
+
+class MonsterWidget extends StatelessWidget {
+  const MonsterWidget({super.key, required this.monster});
+  final Monster monster;
+
+  @override
+  Widget build(BuildContext context) => ListView(
+        children: [
+          Text(monster.name),
+          monster.imageUrl != ""
+              ? getDndApiImage(monster.imageUrl)
+              : const Icon(Icons.question_mark),
+        ],
+      );
 }
