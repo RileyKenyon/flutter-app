@@ -1,11 +1,11 @@
-import 'package:beasts_and_bards/friend.dart';
+import 'package:beasts_and_bards/data/friend.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'app_state.dart';
 import 'src/widgets.dart';
-import 'game.dart';
+import 'data/game.dart';
 
 class CreateGameForm extends StatefulWidget {
   const CreateGameForm({super.key, required this.appState});

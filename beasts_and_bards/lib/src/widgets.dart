@@ -2,9 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:ffi';
+
 import 'package:beasts_and_bards/app_state.dart';
 import 'package:flutter/material.dart';
-import 'package:beasts_and_bards/game.dart';
+import 'package:beasts_and_bards/data/game.dart';
 import 'package:beasts_and_bards/src/dio_widgets.dart';
 
 class Header extends StatelessWidget {
@@ -199,3 +201,11 @@ class MonsterWidget extends StatelessWidget {
         ],
       );
 }
+
+// class CharacterWidget extends StatelessWidget {
+//   const CharacterWidget({super.key, super.appState});
+  
+//   @override
+//   Widget build(BuildContext context) => 
+//   )
+// }

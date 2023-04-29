@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
-import 'package:beasts_and_bards/friend.dart';
-import 'package:beasts_and_bards/game.dart';
+import 'package:beasts_and_bards/data/friend.dart';
+import 'package:beasts_and_bards/data/game.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:flutter/material.dart';

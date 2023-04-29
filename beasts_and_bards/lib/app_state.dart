@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'
@@ -15,6 +16,7 @@ import 'data/friend.dart';
 import 'data/game.dart';
 import 'firebase_options.dart';
 import 'dart:io';
+import 'data/character.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -186,18 +188,30 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<DocumentReference> addCharacterToPlayer(Character character) {
-    if (!_loggedIn) {
+  // Future<DocumentReference> addAbilitiesToCharacter(Character character) {
+  //   if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {
+  //     throw Exception('Must be logged in');
+  //   }
+
+  //   return FirebaseFirestore.instance
+  //       .collection('character')
+  //       .doc(character.uuid)
+  //       .collection('abilities')
+  //       .add(character.abilities.toJson());
+  // }
+
+  Future<void> addCharacterToDatabase(Character character) async {
+    if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {
       throw Exception('Must be logged in');
     }
 
-    return FirebaseFirestore.instance.collection('games').add(<String, dynamic>{
-      'text': newgame.name,
-      'players': playerNames,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'name': FirebaseAuth.instance.currentUser!.displayName,
-      'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
-  
-
+    return FirebaseFirestore.instance
+        .collection('character')
+        .withConverter(
+            fromFirestore: Character.fromFirestore,
+            toFirestore: (Character character, options) =>
+                character.toFirestore())
+        .doc(character.uuid)
+        .set(character);
+  }
 }

@@ -1,4 +1,4 @@
-import 'package:beasts_and_bards/friend.dart';
+import 'package:beasts_and_bards/data/friend.dart';
 
 class Game {
   Game(
