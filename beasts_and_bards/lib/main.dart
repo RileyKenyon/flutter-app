@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:beasts_and_bards/new_character_form.dart';
 import 'package:beasts_and_bards/nfc_reader.dart';
 import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -147,10 +148,15 @@ final _router = GoRouter(
               return Consumer<ApplicationState>(
                 builder: (context, appState, _) => MonsterDetailsPage(
                   monster: state.extra as Monster,
-                  // monster: Monster(
-                  //     imageUrl: "",
-                  //     name: "Aboleth",
-                  //     url: "/api/monsters/aboleth"),
+                ),
+              );
+            }),
+        GoRoute(
+            path: 'create-new-character',
+            builder: (context, state) {
+              return Consumer<ApplicationState>(
+                builder: (context, appState, _) => NewCharacterPage(
+                  appState: appState,
                 ),
               );
             }),

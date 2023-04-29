@@ -25,11 +25,6 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Image.asset('assets/title.gif'),
             const SizedBox(height: 8),
-            // Consumer<ApplicationState>(
-            //   builder: (context, appState, _) =>
-            //       IconAndDetail(Icons.calendar_today, appState.eventDate),
-            // ),
-            // const IconAndDetail(Icons.shield, 'San Francisco'),
             Consumer<ApplicationState>(
               builder: (context, appState, _) => AuthFunc(
                 loggedIn: appState.loggedIn,

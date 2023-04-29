@@ -2,6 +2,7 @@ import 'package:beasts_and_bards/app_state.dart';
 import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'src/dio_widgets.dart';
 
@@ -72,6 +73,14 @@ class _GameDetailPage extends State<GameDetailPage> {
       appBar: AppBar(title: const Text('Quest')),
       body: Center(
         child: _widgets.elementAt(_selectedIndex),
+      ),
+      floatingActionButton: Visibility(
+        visible: _selectedIndex == 0,
+        child: FloatingActionButton(
+          onPressed: () => (context.push('/create-new-character')),
+          backgroundColor: colorScheme.primary,
+          child: const Icon(MdiIcons.sword),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
