@@ -11,8 +11,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'friend.dart';
-import 'game.dart';
+import 'data/friend.dart';
+import 'data/game.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 
@@ -186,14 +186,9 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<DocumentReference> addCharacterToPlayer(Game newgame) {
+  Future<DocumentReference> addCharacterToPlayer(Character character) {
     if (!_loggedIn) {
       throw Exception('Must be logged in');
-    }
-
-    List<String> playerNames = [];
-    for (final player in newgame.players) {
-      playerNames.add(player.name);
     }
 
     return FirebaseFirestore.instance.collection('games').add(<String, dynamic>{
