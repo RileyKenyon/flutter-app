@@ -12,6 +12,8 @@ class NewCharacterPage extends StatefulWidget {
 
   @override
   State<NewCharacterPage> createState() => _NewCharacterPage();
+
+  void submitGame(String gameName) => {appState.addMessageToDatabase(gameName)};
 }
 
 class _NewCharacterPage extends State<NewCharacterPage> {
