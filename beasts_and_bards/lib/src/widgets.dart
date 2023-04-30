@@ -213,13 +213,14 @@ class MonsterWidget extends StatelessWidget {
 // }
 
 class AbilityWidget extends StatelessWidget {
-  const AbilityWidget(this.content, this.icon, {super.key});
+  const AbilityWidget(this.content, this.icon, this.controller, {super.key});
   final String content;
   final Icon icon;
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        child: TextFormField(
+        child: TextField(
           decoration: InputDecoration(
               isDense: true,
               icon: icon,
@@ -233,6 +234,7 @@ class AbilityWidget extends StatelessWidget {
             FilteringTextInputFormatter.digitsOnly
           ],
           scrollPadding: EdgeInsets.zero,
+          controller: controller,
         ),
       );
 }

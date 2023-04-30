@@ -15,19 +15,21 @@ class NewCharacterPage extends StatefulWidget {
   @override
   State<NewCharacterPage> createState() => _NewCharacterPage();
 
-  Set<Future<void>> submitCharacter() => {
-        appState.addCharacterToDatabase(Character(
-            name: "bob",
-            race: "elf",
-            abilities: Abilities(
-                charisma: 1,
-                constitution: 1,
-                dexterity: 2,
-                intelligence: 4,
-                strength: 5,
-                wisdom: 10),
-            gameId: "Generic Game",
-            uuid: "jjkldsfj-dsfasdfkl2-324e"))
+  Set<Future<void>> submitCharacter(Character c) => {
+        appState.addCharacterToDatabase(c
+            // Character(
+            //   name: "bob",
+            //   race: "elf",
+            //   abilities: Abilities(
+            //       charisma: 1,
+            //       constitution: 1,
+            //       dexterity: 2,
+            //       intelligence: 4,
+            //       strength: 5,
+            //       wisdom: 10),
+            //   gameId: "Generic Game",
+            //   uuid: "jjkldsfj-dsfasdfkl2-324e"),
+            )
       };
 }
 
@@ -35,7 +37,9 @@ class _NewCharacterPage extends State<NewCharacterPage> {
   final nameController = TextEditingController();
   final raceController = TextEditingController();
   final gameController = TextEditingController();
-
+  final abilityControllers = List<TextEditingController>.generate(
+      6, (int n) => TextEditingController(),
+      growable: false);
   @override
   void dispose() {
     super.dispose();
@@ -43,7 +47,6 @@ class _NewCharacterPage extends State<NewCharacterPage> {
 
   @override
   Widget build(BuildContext context) {
-    Character newCharacter;
     return Scaffold(
       // drawer: Drawer(
       //   child: ListView(
@@ -136,26 +139,52 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                 children: [
                   Expanded(
                     child: Column(
-                      children: const [
-                        AbilityWidget("Charisma", Icon(MdiIcons.starShooting)),
-                        AbilityWidget("Constitution", Icon(MdiIcons.heart)),
-                        AbilityWidget("Dexterity", Icon(MdiIcons.runFast)),
+                      children: [
+                        AbilityWidget(
+                            "Charisma",
+                            const Icon(MdiIcons.starShooting),
+                            abilityControllers[0]),
+                        AbilityWidget(
+                          "Constitution",
+                          const Icon(MdiIcons.heart),
+                          abilityControllers[1],
+                          key: const Key("Constitution"),
+                        ),
+                        AbilityWidget("Dexterity", const Icon(MdiIcons.runFast),
+                            abilityControllers[2]),
                       ],
                     ),
                   ),
                   Expanded(
                     child: Column(
-                      children: const [
-                        AbilityWidget("Intelligence", Icon(MdiIcons.brain)),
-                        AbilityWidget("Strength", Icon(MdiIcons.armFlex)),
-                        AbilityWidget("Wisdom", Icon(MdiIcons.library)),
+                      children: [
+                        AbilityWidget("Intelligence",
+                            const Icon(MdiIcons.brain), abilityControllers[3]),
+                        AbilityWidget("Strength", const Icon(MdiIcons.armFlex),
+                            abilityControllers[4]),
+                        AbilityWidget("Wisdom", const Icon(MdiIcons.library),
+                            abilityControllers[5]),
                       ],
                     ),
                   ),
                 ],
               ),
               ElevatedButton(
-                  onPressed: () => widget.submitCharacter(),
+                  onPressed: () {
+                    widget.submitCharacter(Character(
+                        name: nameController.text,
+                        race: raceController.text,
+                        abilities: Abilities(
+                            charisma: int.parse(abilityControllers[0].text),
+                            constitution: int.parse(abilityControllers[1].text),
+                            dexterity: int.parse(abilityControllers[2].text),
+                            intelligence: int.parse(abilityControllers[3].text),
+                            strength: int.parse(abilityControllers[4].text),
+                            wisdom: int.parse(abilityControllers[5].text)),
+                        gameId: 'Game ID',
+                        uuid: '34221343223-32434fsda'));
+                    context.go('/game-detail');
+                  },
                   child: const Text("Submit Character")),
             ],
           ),
