@@ -120,56 +120,43 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                   controller: raceController,
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                // decoration: const BoxDecoration(
-                //   border: Border(bottom: BorderSide(color: Colors.black)),
-                // ),
-                child: Text(
-                  "Abilities",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
+              // Container(
+              //   padding:
+              //       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              //   // decoration: const BoxDecoration(
+              //   //   border: Border(bottom: BorderSide(color: Colors.black)),
+              //   // ),
+              //   child: Text(
+              //     "Abilities",
+              //     style: Theme.of(context).textTheme.titleLarge,
+              //   ),
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                            icon: Icon(MdiIcons.brain),
-                            border: OutlineInputBorder(),
-                            labelText: "Dexterity"),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                      ),
+                    child: Column(
+                      children: const [
+                        AbilityWidget("Charisma", Icon(MdiIcons.starShooting)),
+                        AbilityWidget("Constitution", Icon(MdiIcons.heart)),
+                        AbilityWidget("Dexterity", Icon(MdiIcons.runFast)),
+                      ],
                     ),
                   ),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 0),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                            labelText: "Enter your value"),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                      ),
+                    child: Column(
+                      children: const [
+                        AbilityWidget("Intelligence", Icon(MdiIcons.brain)),
+                        AbilityWidget("Strength", Icon(MdiIcons.armFlex)),
+                        AbilityWidget("Wisdom", Icon(MdiIcons.library)),
+                      ],
                     ),
                   ),
                 ],
               ),
-              const Text("Push button to submit character"),
               ElevatedButton(
                   onPressed: () => widget.submitCharacter(),
-                  child: const Icon(Icons.abc)),
+                  child: const Text("Submit Character")),
             ],
           ),
         ),

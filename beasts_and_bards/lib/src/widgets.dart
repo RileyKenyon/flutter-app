@@ -8,6 +8,8 @@ import 'package:beasts_and_bards/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:beasts_and_bards/data/game.dart';
 import 'package:beasts_and_bards/src/dio_widgets.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter/services.dart';
 
 class Header extends StatelessWidget {
   const Header(this.heading, {super.key});
@@ -204,8 +206,33 @@ class MonsterWidget extends StatelessWidget {
 
 // class CharacterWidget extends StatelessWidget {
 //   const CharacterWidget({super.key, super.appState});
-  
+
 //   @override
-//   Widget build(BuildContext context) => 
+//   Widget build(BuildContext context) =>
 //   )
 // }
+
+class AbilityWidget extends StatelessWidget {
+  const AbilityWidget(this.content, this.icon, {super.key});
+  final String content;
+  final Icon icon;
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              isDense: true,
+              icon: icon,
+              border: const OutlineInputBorder(),
+              labelText: content),
+          textAlign: TextAlign.center,
+          maxLength: 1,
+          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          scrollPadding: EdgeInsets.zero,
+        ),
+      );
+}
