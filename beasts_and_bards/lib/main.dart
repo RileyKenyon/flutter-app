@@ -17,6 +17,7 @@ import 'dashboard_page.dart';
 import 'create_game_form.dart';
 import 'game_detail_page.dart';
 import 'src/dio_widgets.dart';
+import 'data/game.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -139,6 +140,7 @@ final _router = GoRouter(
               return Consumer<ApplicationState>(
                 builder: (context, appState, _) => GameDetailPage(
                   appState: appState,
+                  game: state.extra as Game,
                 ),
               );
             }),

@@ -196,7 +196,7 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  // Future<DocumentReference> addAbilitiesToCharacter(Character character) {
+  // Future<DocumentReference> addCharacterToProfile(Character character) {
   //   if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {
   //     throw Exception('Must be logged in');
   //   }

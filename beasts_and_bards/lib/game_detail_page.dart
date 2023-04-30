@@ -1,4 +1,5 @@
 import 'package:beasts_and_bards/app_state.dart';
+import 'package:beasts_and_bards/data/game.dart';
 import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,8 +8,9 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'src/dio_widgets.dart';
 
 class GameDetailPage extends StatefulWidget {
-  const GameDetailPage({super.key, required this.appState});
+  const GameDetailPage({super.key, required this.appState, required this.game});
   final ApplicationState appState;
+  final Game game;
   @override
   State<GameDetailPage> createState() => _GameDetailPage();
 }
@@ -16,13 +18,6 @@ class GameDetailPage extends StatefulWidget {
 class _GameDetailPage extends State<GameDetailPage> {
   ValueNotifier<dynamic> result = ValueNotifier(null);
   int _selectedIndex = 0;
-
-  static const List<Widget> _widgets = <Widget>[
-    Text('Character'),
-    Text('Inventory'),
-    DndManager(),
-    MapWidget(title: 'Map')
-  ];
 
   @override
   void dispose() {
@@ -37,6 +32,12 @@ class _GameDetailPage extends State<GameDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> widgets = <Widget>[
+      CharacterWidget(game: widget.game),
+      const Text('Inventory'),
+      const DndManager(),
+      const MapWidget(title: 'Map')
+    ];
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     const bottomNavigationBarItems = <BottomNavigationBarItem>[
@@ -72,7 +73,7 @@ class _GameDetailPage extends State<GameDetailPage> {
       ),
       appBar: AppBar(title: const Text('Quest')),
       body: Center(
-        child: _widgets.elementAt(_selectedIndex),
+        child: widgets.elementAt(_selectedIndex),
       ),
       floatingActionButton: Visibility(
         visible: _selectedIndex == 0,

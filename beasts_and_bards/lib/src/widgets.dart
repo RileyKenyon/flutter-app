@@ -204,14 +204,6 @@ class MonsterWidget extends StatelessWidget {
       );
 }
 
-// class CharacterWidget extends StatelessWidget {
-//   const CharacterWidget({super.key, super.appState});
-
-//   @override
-//   Widget build(BuildContext context) =>
-//   )
-// }
-
 class AbilityWidget extends StatelessWidget {
   const AbilityWidget(this.content, this.icon, this.controller, {super.key});
   final String content;
@@ -237,4 +229,31 @@ class AbilityWidget extends StatelessWidget {
           controller: controller,
         ),
       );
+}
+
+class CharacterWidget extends StatefulWidget {
+  const CharacterWidget({super.key, required this.game});
+  final Game game;
+
+  @override
+  State<CharacterWidget> createState() => _CharacterWidget();
+}
+
+class _CharacterWidget extends State<CharacterWidget> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ListView(children: [
+        Text("Dungeon Master: ${widget.game.dm}"),
+        Text("GameId: ${widget.game.gameId}"),
+        Text("Active: ${widget.game.active ? "Yes" : "No"}"),
+        Text("Number of players: ${widget.game.players.length}")
+      ]),
+    );
+  }
 }

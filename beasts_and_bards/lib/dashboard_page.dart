@@ -68,7 +68,10 @@ class _DashboardPage extends State<DashboardPage> {
                 itemBuilder: (context, index) {
                   return DashboardListItem(
                       game: widget.appState.gameList[index],
-                      onTap: () => {context.push('/game-detail')});
+                      onTap: () => {
+                            context.push('/game-detail',
+                                extra: widget.appState.gameList[index])
+                          });
                 },
               ),
             ),

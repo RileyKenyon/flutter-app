@@ -16,22 +16,12 @@ class NewCharacterPage extends StatefulWidget {
   @override
   State<NewCharacterPage> createState() => _NewCharacterPage();
 
-  Set<Future<void>> submitCharacter(Character c) => {
-        appState.addCharacterToDatabase(c
-            // Character(
-            //   name: "bob",
-            //   race: "elf",
-            //   abilities: Abilities(
-            //       charisma: 1,
-            //       constitution: 1,
-            //       dexterity: 2,
-            //       intelligence: 4,
-            //       strength: 5,
-            //       wisdom: 10),
-            //   gameId: "Generic Game",
-            //   uuid: "jjkldsfj-dsfasdfkl2-324e"),
-            )
-      };
+  Set<Future<void>> submitCharacter(Character c) =>
+      {appState.addCharacterToDatabase(c)};
+
+  // Set<Future<void>> addCharacterToProfile(Character c) => {
+  //       appState.addCharacterToProfile(c)
+  //     };
 }
 
 class _NewCharacterPage extends State<NewCharacterPage> {
@@ -171,23 +161,27 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                 ],
               ),
               ElevatedButton(
-                  onPressed: () {
-                    Uuid uuid = const Uuid();
-                    widget.submitCharacter(Character(
-                        name: nameController.text,
-                        race: raceController.text,
-                        abilities: Abilities(
-                            charisma: int.parse(abilityControllers[0].text),
-                            constitution: int.parse(abilityControllers[1].text),
-                            dexterity: int.parse(abilityControllers[2].text),
-                            intelligence: int.parse(abilityControllers[3].text),
-                            strength: int.parse(abilityControllers[4].text),
-                            wisdom: int.parse(abilityControllers[5].text)),
-                        gameId: 'Game ID',
-                        uuid: uuid.v1()));
-                    context.go('/game-detail');
-                  },
-                  child: const Text("Submit Character")),
+                onPressed: () {
+                  Uuid uuid = const Uuid();
+                  Character character = Character(
+                      name: nameController.text,
+                      race: raceController.text,
+                      abilities: Abilities(
+                          charisma: int.parse(abilityControllers[0].text),
+                          constitution: int.parse(abilityControllers[1].text),
+                          dexterity: int.parse(abilityControllers[2].text),
+                          intelligence: int.parse(abilityControllers[3].text),
+                          strength: int.parse(abilityControllers[4].text),
+                          wisdom: int.parse(abilityControllers[5].text)),
+                      gameId: 'Game ID',
+                      uuid: uuid.v1());
+                  // context.go('/game-detail');
+                  widget.submitCharacter(character);
+                  context.pop();
+                  // widget.addCharacterToProfile(character);
+                },
+                child: const Text("Submit Character"),
+              ),
             ],
           ),
         ),
