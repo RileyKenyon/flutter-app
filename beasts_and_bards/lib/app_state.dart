@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'data/friend.dart';
 import 'data/game.dart';
 import 'firebase_options.dart';
@@ -30,6 +31,8 @@ class ApplicationState extends ChangeNotifier {
   bool _emailVerified = false;
 
   bool get emailVerified => _emailVerified;
+
+  Uuid uuidGen = const Uuid();
 
   StreamSubscription<QuerySnapshot>? _databaseSubscription;
   StreamSubscription<QuerySnapshot>? _friendsListSubscription;
@@ -81,8 +84,12 @@ class ApplicationState extends ChangeNotifier {
           for (final f in doc.data()['players']) {
             players.add(Friend(name: f, message: ""));
           }
-          _gameList.add(
-              Game(name: "abcd", players: players, dm: "doc", active: false));
+          _gameList.add(Game(
+              name: "abcd",
+              players: players,
+              gameId: uuidGen.v1(),
+              dm: "doc",
+              active: false));
         }
         stdout.writeln('Number of games ${snapshot.docs.length}');
         notifyListeners();
@@ -129,6 +136,7 @@ class ApplicationState extends ChangeNotifier {
               Game(
                 name: doc.data()['text'],
                 players: players,
+                gameId: uuidGen.v1(),
                 dm: doc.data()['name'],
                 active: false,
               ),

@@ -62,7 +62,7 @@ class _DashboardPage extends State<DashboardPage> {
               child: ListView.builder(
                 itemCount: widget.appState.gameList.length,
                 prototypeItem: DashboardListItem(
-                  game: Game(name: "None", players: []),
+                  game: Game(name: "None", players: [], gameId: ""),
                   onTap: () {},
                 ),
                 itemBuilder: (context, index) {

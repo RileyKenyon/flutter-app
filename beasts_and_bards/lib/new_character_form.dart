@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:uuid/uuid.dart';
 import 'src/dio_widgets.dart';
 import 'data/character.dart';
 
@@ -171,6 +172,7 @@ class _NewCharacterPage extends State<NewCharacterPage> {
               ),
               ElevatedButton(
                   onPressed: () {
+                    Uuid uuid = const Uuid();
                     widget.submitCharacter(Character(
                         name: nameController.text,
                         race: raceController.text,
@@ -182,7 +184,7 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                             strength: int.parse(abilityControllers[4].text),
                             wisdom: int.parse(abilityControllers[5].text)),
                         gameId: 'Game ID',
-                        uuid: '34221343223-32434fsda'));
+                        uuid: uuid.v1()));
                     context.go('/game-detail');
                   },
                   child: const Text("Submit Character")),

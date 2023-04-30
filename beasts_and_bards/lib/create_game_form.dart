@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 import 'app_state.dart';
 import 'src/widgets.dart';
 import 'data/game.dart';
@@ -42,6 +43,7 @@ class _CreateGameFormState extends State<CreateGameForm> {
 
   @override
   Widget build(BuildContext context) {
+    Uuid uuidGenerator = const Uuid();
     return Scaffold(
       appBar: AppBar(title: const Text("START A NEW ADVENTURE")),
       body: Padding(
@@ -109,6 +111,7 @@ class _CreateGameFormState extends State<CreateGameForm> {
                       Game(
                           name: textController.text,
                           players: partyList,
+                          gameId: uuidGenerator.v1(),
                           dm: username,
                           active: false),
                     );
