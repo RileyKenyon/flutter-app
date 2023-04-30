@@ -1,6 +1,7 @@
 import 'package:beasts_and_bards/app_state.dart';
 import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nfc_manager/nfc_manager.dart';
@@ -31,6 +32,10 @@ class NewCharacterPage extends StatefulWidget {
 }
 
 class _NewCharacterPage extends State<NewCharacterPage> {
+  final nameController = TextEditingController();
+  final raceController = TextEditingController();
+  final gameController = TextEditingController();
+
   @override
   void dispose() {
     super.dispose();
@@ -38,6 +43,7 @@ class _NewCharacterPage extends State<NewCharacterPage> {
 
   @override
   Widget build(BuildContext context) {
+    Character newCharacter;
     return Scaffold(
       // drawer: Drawer(
       //   child: ListView(
@@ -58,19 +64,115 @@ class _NewCharacterPage extends State<NewCharacterPage> {
       //     ],
       //   ),
       // ),
-      appBar: AppBar(title: const Text("Create a New Character")),
+      appBar: AppBar(title: const Text("CREATE A NEW CHARACTER")),
       body: Center(
-        child: ListView(children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child:
-                Text('Welcome!', style: Theme.of(context).textTheme.titleLarge),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Text("Create a new Character!",
+                    style: Theme.of(context).textTheme.titleLarge),
+              ),
+              // @todo break this out to a separate widget
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: DropdownButtonFormField(
+                  decoration: const InputDecoration(
+                    icon: Icon(MdiIcons.gamepad),
+                    border: OutlineInputBorder(),
+                    hintText: "Select Game",
+                    labelText: "Select Game",
+                  ),
+                  items: const [
+                    DropdownMenuItem(
+                      child: Text('Test Game'),
+                      value: "Test",
+                    ),
+                    DropdownMenuItem(
+                      child: Text('Test Game 2'),
+                      value: "Test2",
+                    ),
+                  ],
+                  onChanged: (dynamic) {},
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                      icon: Icon(MdiIcons.head),
+                      border: OutlineInputBorder(),
+                      hintText: "Character Name",
+                      labelText: "Character Name"),
+                  controller: nameController,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                      icon: Icon(MdiIcons.tree),
+                      border: OutlineInputBorder(),
+                      hintText: "Race Name",
+                      labelText: "Race Name"),
+                  controller: raceController,
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                // decoration: const BoxDecoration(
+                //   border: Border(bottom: BorderSide(color: Colors.black)),
+                // ),
+                child: Text(
+                  "Abilities",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                            icon: Icon(MdiIcons.brain),
+                            border: OutlineInputBorder(),
+                            labelText: "Dexterity"),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 0),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                            labelText: "Enter your value"),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Text("Push button to submit character"),
+              ElevatedButton(
+                  onPressed: () => widget.submitCharacter(),
+                  child: const Icon(Icons.abc)),
+            ],
           ),
-          const Text("Push button to submit character"),
-          ElevatedButton(
-              onPressed: () => widget.submitCharacter(),
-              child: const Icon(Icons.abc)),
-        ]),
+        ),
       ),
     );
   }
