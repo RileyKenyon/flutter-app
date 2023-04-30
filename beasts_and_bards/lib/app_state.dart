@@ -42,6 +42,7 @@ class ApplicationState extends ChangeNotifier {
   // Add game list for user
   List<Game> _gameList = [];
   List<Game> get gameList => _gameList;
+  String activeGameId = "";
 
   Future<void> init() async {
     await Firebase.initializeApp(
@@ -85,10 +86,10 @@ class ApplicationState extends ChangeNotifier {
             players.add(Friend(name: f, message: ""));
           }
           _gameList.add(Game(
-              name: "abcd",
+              name: doc.data()['text'],
               players: players,
-              gameId: uuidGen.v1(),
-              dm: "doc",
+              gameId: doc.id,
+              dm: doc.data()['name'],
               active: false));
         }
         stdout.writeln('Number of games ${snapshot.docs.length}');
@@ -134,12 +135,11 @@ class ApplicationState extends ChangeNotifier {
             }
             _gameList.add(
               Game(
-                name: doc.data()['text'],
-                players: players,
-                gameId: uuidGen.v1(),
-                dm: doc.data()['name'],
-                active: false,
-              ),
+                  name: doc.data()['text'],
+                  players: players,
+                  gameId: doc.id,
+                  dm: doc.data()['name'],
+                  active: false),
             );
           }
           stdout.writeln('Number of games ${snapshot.docs.length}');
@@ -164,7 +164,7 @@ class ApplicationState extends ChangeNotifier {
     await currentUser.reload();
   }
 
-  Future<DocumentReference> addMessageToDatabase(String message) {
+  Future<DocumentReference> submitGameToDatabase(String message) {
     if (!_loggedIn) {
       throw Exception('Must be logged in');
     }
@@ -177,7 +177,7 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<DocumentReference> addGameToDatabase(Game newgame) {
+  Future<void> addGameToDatabase(Game newgame) {
     if (!_loggedIn) {
       throw Exception('Must be logged in');
     }
@@ -187,7 +187,10 @@ class ApplicationState extends ChangeNotifier {
       playerNames.add(player.name);
     }
 
-    return FirebaseFirestore.instance.collection('games').add(<String, dynamic>{
+    return FirebaseFirestore.instance
+        .collection('games')
+        .doc(newgame.gameId)
+        .set(<String, dynamic>{
       'text': newgame.name,
       'players': playerNames,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -196,17 +199,17 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  // Future<DocumentReference> addCharacterToProfile(Character character) {
-  //   if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {
-  //     throw Exception('Must be logged in');
-  //   }
-
-  //   return FirebaseFirestore.instance
-  //       .collection('character')
-  //       .doc(character.uuid)
-  //       .collection('abilities')
-  //       .add(character.abilities.toJson());
-  // }
+  Future<void> addCharacterToActiveGame(Character character) {
+    if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {
+      throw Exception('Must be logged in');
+    }
+    DocumentReference db =
+        FirebaseFirestore.instance.collection('games').doc(activeGameId);
+    return db.update({
+      'players': FieldValue.arrayUnion([character.name])
+      // 'players': [character.name],
+    });
+  }
 
   Future<void> addCharacterToDatabase(Character character) async {
     if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {

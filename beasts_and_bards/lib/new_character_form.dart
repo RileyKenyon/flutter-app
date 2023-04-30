@@ -16,12 +16,11 @@ class NewCharacterPage extends StatefulWidget {
   @override
   State<NewCharacterPage> createState() => _NewCharacterPage();
 
-  Set<Future<void>> submitCharacter(Character c) =>
+  Set<Future<void>> submitCharacterToDatabase(Character c) =>
       {appState.addCharacterToDatabase(c)};
 
-  // Set<Future<void>> addCharacterToProfile(Character c) => {
-  //       appState.addCharacterToProfile(c)
-  //     };
+  Set<Future<void>> addCharacterToActiveGame(Character c) =>
+      {appState.addCharacterToActiveGame(c)};
 }
 
 class _NewCharacterPage extends State<NewCharacterPage> {
@@ -39,25 +38,6 @@ class _NewCharacterPage extends State<NewCharacterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: Drawer(
-      //   child: ListView(
-      //     padding: EdgeInsets.zero,
-      //     children: [
-      //       const DrawerHeader(
-      //         decoration: BoxDecoration(color: Colors.red),
-      //         child: Image(image: AssetImage('assets/d20.png')),
-      //       ),
-      //       ListTile(
-      //         title: const Text('Go Home'),
-      //         onTap: () => (context.go('/')),
-      //       ),
-      //       ListTile(
-      //         title: const Text('Profile'),
-      //         onTap: () => (context.go('/profile')),
-      //       )
-      //     ],
-      //   ),
-      // ),
       appBar: AppBar(title: const Text("CREATE A NEW CHARACTER")),
       body: Center(
         child: Padding(
@@ -68,29 +48,6 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: Text("Create a new Character!",
                     style: Theme.of(context).textTheme.titleLarge),
-              ),
-              // @todo break this out to a separate widget
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: DropdownButtonFormField(
-                  decoration: const InputDecoration(
-                    icon: Icon(MdiIcons.gamepad),
-                    border: OutlineInputBorder(),
-                    hintText: "Select Game",
-                    labelText: "Select Game",
-                  ),
-                  items: const [
-                    DropdownMenuItem(
-                      child: Text('Test Game'),
-                      value: "Test",
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Test Game 2'),
-                      value: "Test2",
-                    ),
-                  ],
-                  onChanged: (dynamic) {},
-                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -175,10 +132,9 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                           wisdom: int.parse(abilityControllers[5].text)),
                       gameId: 'Game ID',
                       uuid: uuid.v1());
-                  // context.go('/game-detail');
-                  widget.submitCharacter(character);
+                  widget.submitCharacterToDatabase(character);
+                  widget.addCharacterToActiveGame(character);
                   context.pop();
-                  // widget.addCharacterToProfile(character);
                 },
                 child: const Text("Submit Character"),
               ),

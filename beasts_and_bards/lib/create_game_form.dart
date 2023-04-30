@@ -15,7 +15,7 @@ class CreateGameForm extends StatefulWidget {
   @override
   State<CreateGameForm> createState() => _CreateGameFormState();
 
-  void submitGame(String gameName) => {appState.addMessageToDatabase(gameName)};
+  void submitGame(String gameName) => {appState.submitGameToDatabase(gameName)};
 }
 
 class _CreateGameFormState extends State<CreateGameForm> {

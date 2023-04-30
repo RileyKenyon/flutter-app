@@ -32,6 +32,7 @@ class _GameDetailPage extends State<GameDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    widget.appState.activeGameId = widget.game.gameId;
     final List<Widget> widgets = <Widget>[
       CharacterWidget(game: widget.game),
       const Text('Inventory'),
