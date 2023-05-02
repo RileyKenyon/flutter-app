@@ -34,7 +34,7 @@ class _GameDetailPage extends State<GameDetailPage> {
   Widget build(BuildContext context) {
     widget.appState.activeGameId = widget.game.gameId;
     final List<Widget> widgets = <Widget>[
-      CharacterWidget(game: widget.game),
+      CharacterWidget(streamId: widget.game.gameId),
       const Text('Inventory'),
       const DndManager(),
       const MapWidget(title: 'Map')

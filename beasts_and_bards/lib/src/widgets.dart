@@ -2,9 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:beasts_and_bards/app_state.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:beasts_and_bards/data/game.dart';
 import 'package:beasts_and_bards/src/dio_widgets.dart';
@@ -232,8 +234,8 @@ class AbilityWidget extends StatelessWidget {
 }
 
 class CharacterWidget extends StatefulWidget {
-  const CharacterWidget({super.key, required this.game});
-  final Game game;
+  const CharacterWidget({super.key, required this.streamId});
+  final String streamId;
 
   @override
   State<CharacterWidget> createState() => _CharacterWidget();
@@ -247,13 +249,32 @@ class _CharacterWidget extends State<CharacterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final Stream<DocumentSnapshot> snapshot = FirebaseFirestore.instance
+        .collection('games')
+        .doc(widget.streamId)
+        .snapshots();
     return Center(
-      child: ListView(children: [
-        Text("Dungeon Master: ${widget.game.dm}"),
-        Text("GameId: ${widget.game.gameId}"),
-        Text("Active: ${widget.game.active ? "Yes" : "No"}"),
-        Text("Number of players: ${widget.game.players.length}")
-      ]),
-    );
+        child: StreamBuilder(
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.connectionState == ConnectionState.none) {
+          return const CircularProgressIndicator();
+        } else {
+          if (snapshot.hasData) {
+            final docData = snapshot.data!;
+            return ListView(
+              children: [
+                Text("Dungeon Master: ${docData['text']}"),
+                Text("UserId: ${docData['userId']}"),
+                // Text("Active: ${snapshot.data()['active ? "Yes" : "No"}"),
+                Text("Number of players: ${docData['players'].length}")
+              ],
+            );
+          }
+        }
+        return const Text("Something went wrong");
+      },
+      stream: snapshot,
+    ));
   }
 }
