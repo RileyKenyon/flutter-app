@@ -47,10 +47,10 @@ class ApplicationState extends ChangeNotifier {
   Future<void> init() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    // if (kDebugMode) {
-    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-    // }
+    if (kDebugMode) {
+      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    }
     FirebaseUIAuth.configureProviders([
       EmailAuthProvider(),
     ]);
