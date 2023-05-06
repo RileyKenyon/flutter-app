@@ -25,6 +25,7 @@ class Game {
           ? Map.from(data?['players']) as List<Friend>
           : List<Friend>.empty(growable: true),
       gameId: data?['gameId'],
+      dm: data?['dm'],
     );
   }
 

@@ -94,7 +94,8 @@ class DashboardListItem extends StatelessWidget {
                   Icons.do_not_disturb,
                   color: Colors.red,
                 ),
-          title: Text(game.name),
+          title: Text("Campaign: ${game.name}"),
+          subtitle: Text("Dungeon Master: ${game.dm}"),
           onTap: onTap,
         ),
       );
@@ -264,9 +265,10 @@ class _CharacterWidget extends State<CharacterWidget> {
             final docData = snapshot.data!;
             return ListView(
               children: [
-                Text("Dungeon Master: ${docData['text']}"),
-                Text("UserId: ${docData['userId']}"),
-                // Text("Active: ${snapshot.data()['active ? "Yes" : "No"}"),
+                Text("Game ID: ${docData['gameId']}"),
+                Text("Dungeon Master: ${docData['dm']}"),
+                Text("Game Name: ${docData['name']}"),
+                Text("Active: ${docData['active'] ? "Yes" : "No"}"),
                 Text("Number of players: ${docData['players'].length}")
               ],
             );

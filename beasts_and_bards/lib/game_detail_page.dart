@@ -8,9 +8,10 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'src/dio_widgets.dart';
 
 class GameDetailPage extends StatefulWidget {
-  const GameDetailPage({super.key, required this.appState, required this.game});
+  const GameDetailPage(
+      {super.key, required this.appState, required this.gameId});
   final ApplicationState appState;
-  final Game game;
+  final String gameId;
   @override
   State<GameDetailPage> createState() => _GameDetailPage();
 }
@@ -32,9 +33,9 @@ class _GameDetailPage extends State<GameDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    widget.appState.activeGameId = widget.game.gameId;
+    widget.appState.activeGameId = widget.gameId;
     final List<Widget> widgets = <Widget>[
-      CharacterWidget(streamId: widget.game.gameId),
+      CharacterWidget(streamId: widget.gameId),
       const Text('Inventory'),
       const DndManager(),
       const MapWidget(title: 'Map')

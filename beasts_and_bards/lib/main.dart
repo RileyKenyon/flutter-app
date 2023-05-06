@@ -140,7 +140,7 @@ final _router = GoRouter(
               return Consumer<ApplicationState>(
                 builder: (context, appState, _) => GameDetailPage(
                   appState: appState,
-                  game: state.extra as Game,
+                  gameId: state.extra as String,
                 ),
               );
             }),

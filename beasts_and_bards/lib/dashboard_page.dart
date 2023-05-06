@@ -1,16 +1,9 @@
-import 'dart:ffi';
-
-import 'package:beasts_and_bards/data/friend.dart';
 import 'package:beasts_and_bards/data/game.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart'
-    hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import 'app_state.dart';
-import 'src/authentication.dart';
 import 'src/widgets.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -27,12 +20,13 @@ class _DashboardPage extends State<DashboardPage> {
     super.dispose();
   }
 
-  final Stream<QuerySnapshot> _dashboardStream = FirebaseFirestore.instance
-      .collection('games')
-      // .withConverter(
-      //     fromFirestore: Game.fromFirestore,
-      //     toFirestore: (Game game, options) => game.toFirestore())
-      .snapshots();
+  final Stream<QuerySnapshot<Map<String, dynamic>>> _dashboardStream =
+      FirebaseFirestore.instance
+          .collection('games')
+          // .withConverter(
+          //     fromFirestore: Game.fromFirestore,
+          //     toFirestore: (Game game, options) => game.toFirestore())
+          .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +51,10 @@ class _DashboardPage extends State<DashboardPage> {
           ),
         ),
         appBar: AppBar(title: const Text("Dashboard")),
-        body: StreamBuilder<QuerySnapshot>(
+        body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: _dashboardStream,
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder: (context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             }
@@ -73,46 +68,20 @@ class _DashboardPage extends State<DashboardPage> {
             }
             return ListView(
               children: snapshot.data!.docs
-                  .map((DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
-                    return ListTile(
-                        title: Text(data['name'] ?? "No name"),
-                        subtitle: Text(data['dm'] ?? "No Dungeon Master"));
+                  .map((DocumentSnapshot<Map<String, dynamic>> document) {
+                    // @TODO figure out how to use the Firestore instance withconverter instead
+                    SnapshotOptions? options;
+                    final data = Game.fromFirestore(document, options);
+                    return DashboardListItem(
+                        game: data,
+                        onTap: () =>
+                            {context.push('/game-detail', extra: data.gameId)});
                   })
                   .toList()
                   .cast(),
             );
           },
         ),
-        // ListView(children: <Widget>[
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        //     child:
-        //         Text('Welcome!', style: Theme.of(context).textTheme.titleLarge),
-        //   ),
-        //   Visibility(
-        //     visible: widget.appState.gameList.isNotEmpty,
-        //     child: ConstrainedBox(
-        //       constraints: const BoxConstraints(maxHeight: 300),
-        //       child: ListView.builder(
-        //         itemCount: widget.appState.gameList.length,
-        //         prototypeItem: DashboardListItem(
-        //           game: Game(name: "None", players: [], gameId: ""),
-        //           onTap: () {},
-        //         ),
-        //         itemBuilder: (context, index) {
-        //           return DashboardListItem(
-        //               game: widget.appState.gameList[index],
-        //               onTap: () => {
-        //                     context.push('/game-detail',
-        //                         extra: widget.appState.gameList[index])
-        //                   });
-        //         },
-        //       ),
-        //     ),
-        //   ),
-        // ]),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,
           foregroundColor: Colors.white,
