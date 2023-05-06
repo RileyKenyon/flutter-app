@@ -189,14 +189,19 @@ class ApplicationState extends ChangeNotifier {
 
     return FirebaseFirestore.instance
         .collection('games')
+        .withConverter(
+            fromFirestore: Game.fromFirestore,
+            toFirestore: (Game game, options) => game.toFirestore())
         .doc(newgame.gameId)
-        .set(<String, dynamic>{
-      'text': newgame.name,
-      'players': playerNames,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'name': FirebaseAuth.instance.currentUser!.displayName,
-      'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
+        .set(newgame
+            // <String, dynamic>{
+            //   'text': newgame.name,
+            //   'players': playerNames,
+            //   'timestamp': DateTime.now().millisecondsSinceEpoch,
+            //   'name': FirebaseAuth.instance.currentUser!.displayName,
+            //   'userId': FirebaseAuth.instance.currentUser!.uid,
+            // },
+            );
   }
 
   Future<void> addCharacterToActiveGame(Character character) {

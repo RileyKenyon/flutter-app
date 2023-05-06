@@ -1,9 +1,20 @@
-// Copyright 2022 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 class Friend {
   Friend({required this.name, required this.message});
   final String name;
   final String message;
 }
+
+// Should look like
+/**
+ * Game
+ *  - players (array)
+ *    - ref doc 1 --> 'player/player.uuid'
+ *    - ref doc 2
+ *    ...
+ *    - ref doc n
+ * 
+ * 
+ * Characters
+ *  
+ *    
+ */
