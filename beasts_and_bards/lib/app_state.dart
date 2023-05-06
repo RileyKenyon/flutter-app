@@ -211,7 +211,9 @@ class ApplicationState extends ChangeNotifier {
     DocumentReference db =
         FirebaseFirestore.instance.collection('games').doc(activeGameId);
     return db.update({
-      'players': FieldValue.arrayUnion([character.name])
+      'players': FieldValue.arrayUnion([
+        {'name': character.name, 'message': ""}
+      ])
       // 'players': [character.name],
     });
   }

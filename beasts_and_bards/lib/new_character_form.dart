@@ -130,7 +130,7 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                           intelligence: int.parse(abilityControllers[3].text),
                           strength: int.parse(abilityControllers[4].text),
                           wisdom: int.parse(abilityControllers[5].text)),
-                      gameId: 'Game ID',
+                      gameId: widget.appState.activeGameId,
                       uuid: uuid.v1());
                   widget.submitCharacterToDatabase(character);
                   widget.addCharacterToActiveGame(character);

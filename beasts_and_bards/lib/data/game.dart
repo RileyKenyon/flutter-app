@@ -22,7 +22,7 @@ class Game {
     return Game(
       name: data?['name'],
       players: data?['players'] is Iterable
-          ? Map.from(data?['players']) as List<Friend>
+          ? getFriendsList(data?['players'])
           : List<Friend>.empty(growable: true),
       gameId: data?['gameId'],
       dm: data?['dm'],
