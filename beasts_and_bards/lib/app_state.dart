@@ -198,7 +198,8 @@ class ApplicationState extends ChangeNotifier {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('games')
-        .add({'ref': ref});
+        .doc(newgame.gameId)
+        .set({'gameRef': ref});
 
     return ref.set(newgame);
   }

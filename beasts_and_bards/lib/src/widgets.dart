@@ -12,6 +12,7 @@ import 'package:beasts_and_bards/data/game.dart';
 import 'package:beasts_and_bards/src/dio_widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Header extends StatelessWidget {
   const Header(this.heading, {super.key});
@@ -250,38 +251,54 @@ class _CharacterWidget extends State<CharacterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<DocumentSnapshot> snapshot = FirebaseFirestore.instance
-        .collection('games')
-        .doc(widget.streamId)
+    if (FirebaseAuth.instance.currentUser != null) {
+      final Future<DocumentSnapshot?> ref = getDocumentRef(widget.streamId);
+      return Center(
+        child: FutureBuilder(
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                snapshot.connectionState == ConnectionState.none) {
+              return const CircularProgressIndicator();
+            } else {
+              if (snapshot.hasData && snapshot.data!.data() != null) {
+                final g = snapshot.data!.data()! as Game;
+                return ListView(
+                  children: [
+                    // // Diagnostic
+                    Text("Game ID: ${g.gameId}"),
+                    Text("Dungeon Master: ${g.dm}"),
+                    Text("Game Name: ${g.name}"),
+                    Text("Active: ${g.active ? "Yes" : "No"}"),
+                    Text("Number of players: ${g.players.length}"),
+                    // Actual widget
+                  ],
+                );
+              }
+            }
+            return const Text("Something went wrong, timed out");
+          },
+          future: ref,
+        ),
+      );
+    } else {
+      return const Text("Oops, Something went wrong");
+    }
+  }
+}
+
+Future<DocumentSnapshot?> getDocumentRef(String id) async {
+  final DocumentReference ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('games')
+      .doc(id);
+  Future<DocumentSnapshot?> document = ref.get().then((DocumentSnapshot doc) {
+    DocumentReference gameKey = doc.get("gameRef");
+    return gameKey
         .withConverter(
             fromFirestore: Game.fromFirestore,
             toFirestore: (Game game, options) => game.toFirestore())
-        .snapshots();
-    return Center(
-        child: StreamBuilder(
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.connectionState == ConnectionState.none) {
-          return const CircularProgressIndicator();
-        } else {
-          if (snapshot.hasData) {
-            Game g = snapshot.data!.data() as Game;
-            return ListView(
-              children: [
-                // Diagnostic
-                Text("Game ID: ${g.gameId}"),
-                Text("Dungeon Master: ${g.dm}"),
-                Text("Game Name: ${g.name}"),
-                Text("Active: ${g.active ? "Yes" : "No"}"),
-                Text("Number of players: ${g.players.length}"),
-                // Actual widget
-              ],
-            );
-          }
-        }
-        return const Text("Something went wrong");
-      },
-      stream: snapshot,
-    ));
-  }
+        .get();
+  });
+  return document;
 }
