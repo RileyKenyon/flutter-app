@@ -178,7 +178,7 @@ class ApplicationState extends ChangeNotifier {
   }
 
   Future<void> addGameToDatabase(Game newgame) {
-    if (!_loggedIn) {
+    if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {
       throw Exception('Must be logged in');
     }
 
@@ -187,21 +187,20 @@ class ApplicationState extends ChangeNotifier {
       playerNames.add(player.name);
     }
 
-    return FirebaseFirestore.instance
+    DocumentReference ref = FirebaseFirestore.instance
         .collection('games')
         .withConverter(
             fromFirestore: Game.fromFirestore,
             toFirestore: (Game game, options) => game.toFirestore())
-        .doc(newgame.gameId)
-        .set(newgame
-            // <String, dynamic>{
-            //   'text': newgame.name,
-            //   'players': playerNames,
-            //   'timestamp': DateTime.now().millisecondsSinceEpoch,
-            //   'name': FirebaseAuth.instance.currentUser!.displayName,
-            //   'userId': FirebaseAuth.instance.currentUser!.uid,
-            // },
-            );
+        .doc(newgame.gameId);
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('games')
+        .add({'ref': ref});
+
+    return ref.set(newgame);
   }
 
   Future<void> addCharacterToActiveGame(Character character) {
@@ -223,13 +222,20 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
-    return FirebaseFirestore.instance
+    DocumentReference ref = FirebaseFirestore.instance
         .collection('character')
         .withConverter(
             fromFirestore: Character.fromFirestore,
             toFirestore: (Character character, options) =>
                 character.toFirestore())
-        .doc(character.uuid)
-        .set(character);
+        .doc(character.uuid);
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('characters')
+        .add({'ref': ref});
+
+    return ref.set(character);
   }
 }
