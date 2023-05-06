@@ -2,6 +2,13 @@ class Friend {
   Friend({required this.name, required this.message});
   final String name;
   final String message;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'message': message,
+    };
+  }
 }
 
 List<Friend> getFriendsList(List<dynamic> iterable) {

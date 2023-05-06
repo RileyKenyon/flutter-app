@@ -253,6 +253,9 @@ class _CharacterWidget extends State<CharacterWidget> {
     final Stream<DocumentSnapshot> snapshot = FirebaseFirestore.instance
         .collection('games')
         .doc(widget.streamId)
+        .withConverter(
+            fromFirestore: Game.fromFirestore,
+            toFirestore: (Game game, options) => game.toFirestore())
         .snapshots();
     return Center(
         child: StreamBuilder(
@@ -262,14 +265,16 @@ class _CharacterWidget extends State<CharacterWidget> {
           return const CircularProgressIndicator();
         } else {
           if (snapshot.hasData) {
-            final docData = snapshot.data!;
+            Game g = snapshot.data!.data() as Game;
             return ListView(
               children: [
-                Text("Game ID: ${docData['gameId']}"),
-                Text("Dungeon Master: ${docData['dm']}"),
-                Text("Game Name: ${docData['name']}"),
-                Text("Active: ${docData['active'] ? "Yes" : "No"}"),
-                Text("Number of players: ${docData['players'].length}")
+                // Diagnostic
+                Text("Game ID: ${g.gameId}"),
+                Text("Dungeon Master: ${g.dm}"),
+                Text("Game Name: ${g.name}"),
+                Text("Active: ${g.active ? "Yes" : "No"}"),
+                Text("Number of players: ${g.players.length}"),
+                // Actual widget
               ],
             );
           }

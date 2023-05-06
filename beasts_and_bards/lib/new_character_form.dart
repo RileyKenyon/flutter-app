@@ -71,17 +71,6 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                   controller: raceController,
                 ),
               ),
-              // Container(
-              //   padding:
-              //       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              //   // decoration: const BoxDecoration(
-              //   //   border: Border(bottom: BorderSide(color: Colors.black)),
-              //   // ),
-              //   child: Text(
-              //     "Abilities",
-              //     style: Theme.of(context).textTheme.titleLarge,
-              //   ),
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

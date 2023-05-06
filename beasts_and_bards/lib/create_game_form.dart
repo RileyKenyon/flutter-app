@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'app_state.dart';
 import 'src/widgets.dart';
@@ -67,10 +68,8 @@ class _CreateGameFormState extends State<CreateGameForm> {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: TextField(
                 decoration: const InputDecoration(
-                  prefixIcon: Text("Players: "),
-                  prefixIconConstraints:
-                      BoxConstraints(minWidth: 0, minHeight: 0),
-                  hintText: "Names",
+                  prefixIcon: Icon(Icons.search),
+                  hintText: "Players",
                 ),
                 controller: playerTextController,
                 onChanged: (value) {

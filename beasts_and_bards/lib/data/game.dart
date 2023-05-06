@@ -35,7 +35,8 @@ class Game {
       "dm": dm,
       "name": name,
       "active": active,
-      "players": {}
+      "players":
+          List<Map<String, dynamic>>.from(players.map((e) => e.toJson())),
     };
   }
 }
