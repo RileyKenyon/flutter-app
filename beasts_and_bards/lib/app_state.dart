@@ -218,7 +218,8 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<void> addCharacterToDatabase(Character character) async {
+  Future<void> addCharacterToDatabase(
+      Character character, String gameId) async {
     if (!_loggedIn || FirebaseAuth.instance.currentUser == null) {
       throw Exception('Must be logged in');
     }
@@ -236,6 +237,13 @@ class ApplicationState extends ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('characters')
         .add({'ref': ref});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('games')
+        .doc(gameId)
+        .update({'characterRef': ref});
 
     return ref.set(character);
   }

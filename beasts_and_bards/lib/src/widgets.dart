@@ -236,6 +236,60 @@ class AbilityWidget extends StatelessWidget {
       );
 }
 
+class CharacterInfoWidget extends StatefulWidget {
+  const CharacterInfoWidget({super.key, required this.streamId});
+  final String streamId;
+
+  @override
+  State<CharacterInfoWidget> createState() => _CharacterInfoWidget();
+}
+
+class _CharacterInfoWidget extends State<CharacterInfoWidget> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser != null) {
+      final Future<DocumentSnapshot?> ref =
+          getCharacterRefDocumentSnapshot(widget.streamId);
+      return Center(
+        child: FutureBuilder(
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                snapshot.connectionState == ConnectionState.none) {
+              return const CircularProgressIndicator();
+            } else {
+              if (snapshot.hasData && snapshot.data!.data() != null) {
+                final g = snapshot.data!.data()! as Character;
+                return ListView(
+                  // This is for nested listviews
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    // // Diagnostic
+                    Text("Name: ${g.name}"),
+                    Text("Race: ${g.race}"),
+                    // Text("abili: ${g.name}"),
+                    Text("uuid: ${g.uuid}"),
+                    // Actual widget
+                  ],
+                );
+              }
+            }
+            return const Text("Something went wrong, timed out");
+          },
+          future: ref,
+        ),
+      );
+    } else {
+      return const Text("Oops, Something went wrong");
+    }
+  }
+}
+
 class CharacterWidget extends StatefulWidget {
   const CharacterWidget({super.key, required this.streamId});
   final String streamId;
@@ -272,6 +326,7 @@ class _CharacterWidget extends State<CharacterWidget> {
                     Text("Game Name: ${g.name}"),
                     Text("Active: ${g.active ? "Yes" : "No"}"),
                     Text("Number of players: ${g.players.length}"),
+                    CharacterInfoWidget(streamId: widget.streamId),
                     // Actual widget
                   ],
                 );

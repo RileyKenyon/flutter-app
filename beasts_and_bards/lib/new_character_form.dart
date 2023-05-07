@@ -17,7 +17,7 @@ class NewCharacterPage extends StatefulWidget {
   State<NewCharacterPage> createState() => _NewCharacterPage();
 
   Set<Future<void>> submitCharacterToDatabase(Character c) =>
-      {appState.addCharacterToDatabase(c)};
+      {appState.addCharacterToDatabase(c, appState.activeGameId)};
 
   Set<Future<void>> addCharacterToActiveGame(Character c) =>
       {appState.addCharacterToActiveGame(c)};
