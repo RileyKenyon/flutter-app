@@ -49,9 +49,9 @@ class IconAndDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(2.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Icon(icon),
             const SizedBox(width: 8),
@@ -59,6 +59,28 @@ class IconAndDetail extends StatelessWidget {
               detail,
               style: const TextStyle(fontSize: 18),
             )
+          ],
+        ),
+      );
+}
+
+class IconAndDetailValue extends StatelessWidget {
+  const IconAndDetailValue(this.icon, this.detail, this.value, {super.key});
+  final IconData icon;
+  final String detail;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 200,
+              child: IconAndDetail(icon, detail),
+            ),
+            Text(value, style: const TextStyle(fontSize: 18)),
           ],
         ),
       );
@@ -236,6 +258,34 @@ class AbilityWidget extends StatelessWidget {
       );
 }
 
+// class AbilityDisplayWidget extends StatelessWidget {
+//   const AbilityDisplayWidget(this.abilities, {super.key});
+//   final Abilities abilities;
+//   @override
+//   Widget build(BuildContext context) => Padding(
+//         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           // shrinkWrap: true,
+//           // physics: const ClampingScrollPhysics(),
+//           children: [
+//             IconAndDetailValue(
+//                 MdiIcons.starShooting, "Charisma: ", "${abilities.charisma}"),
+//             IconAndDetailValue(
+//                 MdiIcons.heart, "Constitution: ", "${abilities.constitution}"),
+//             IconAndDetailValue(
+//                 MdiIcons.runFast, "Dexterity: ", "${abilities.dexterity}"),
+//             IconAndDetailValue(
+//                 MdiIcons.brain, "Intelligence: ", "${abilities.intelligence}"),
+//             IconAndDetailValue(
+//                 MdiIcons.armFlex, "Strength: ", "${abilities.strength}"),
+//             IconAndDetailValue(
+//                 MdiIcons.library, "Wisdom: ", "${abilities.wisdom}"),
+//           ],
+//         ),
+//       );
+// }
+
 class CharacterInfoWidget extends StatefulWidget {
   const CharacterInfoWidget({super.key, required this.streamId});
   final String streamId;
@@ -263,23 +313,26 @@ class _CharacterInfoWidget extends State<CharacterInfoWidget> {
               return const CircularProgressIndicator();
             } else {
               if (snapshot.hasData && snapshot.data!.data() != null) {
-                final g = snapshot.data!.data()! as Character;
-                return ListView(
-                  // This is for nested listviews
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  children: [
-                    // // Diagnostic
-                    Text("Name: ${g.name}"),
-                    Text("Race: ${g.race}"),
-                    // Text("abili: ${g.name}"),
-                    Text("uuid: ${g.uuid}"),
-                    // Actual widget
-                  ],
-                );
+                final character = snapshot.data!.data()! as Character;
+                return DisplayCharacterInfoWidget(character);
+                // ListView(
+                //   // This is for nested listviews
+                //   // shrinkWrap: true,
+                //   // physics: const ClampingScrollPhysics(),
+                //   children: [
+                //     // // Diagnostic
+                //     // Text("Name: ${character.name}"),
+                //     // Text("Race: ${character.race}"),
+                //     // Text("abili: ${g.name}"),
+                //     // Text("uuid: ${character.uuid}"),
+                //     // Actual widget
+                //     DisplayCharacterInfoWidget(character)
+                //   ],
+                // );
+              } else {
+                return const Text("Create your character to view stats!");
               }
             }
-            return const Text("Something went wrong, timed out");
           },
           future: ref,
         ),
@@ -326,7 +379,6 @@ class _CharacterWidget extends State<CharacterWidget> {
                     Text("Game Name: ${g.name}"),
                     Text("Active: ${g.active ? "Yes" : "No"}"),
                     Text("Number of players: ${g.players.length}"),
-                    CharacterInfoWidget(streamId: widget.streamId),
                     // Actual widget
                   ],
                 );
@@ -340,6 +392,69 @@ class _CharacterWidget extends State<CharacterWidget> {
     } else {
       return const Text("Oops, Something went wrong");
     }
+  }
+}
+
+class DisplayCharacterInfoWidget extends StatelessWidget {
+  const DisplayCharacterInfoWidget(this._character, {super.key});
+  final Character _character;
+
+  @override
+  Widget build(BuildContext context) {
+    TextTheme theme = Theme.of(context).textTheme;
+    return ListView(
+      // shrinkWrap: true,
+      // physics: const ClampingScrollPhysics(),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Column(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_character.name, style: theme.headlineLarge),
+                  Text("Race: ${_character.race}"),
+                  IconAndDetailValue(MdiIcons.starShooting, "Charisma: ",
+                      "${_character.abilities.charisma}"),
+                  IconAndDetailValue(MdiIcons.heart, "Constitution: ",
+                      "${_character.abilities.constitution}"),
+                  IconAndDetailValue(MdiIcons.runFast, "Dexterity: ",
+                      "${_character.abilities.dexterity}"),
+                  IconAndDetailValue(MdiIcons.brain, "Intelligence: ",
+                      "${_character.abilities.intelligence}"),
+                  IconAndDetailValue(MdiIcons.armFlex, "Strength: ",
+                      "${_character.abilities.strength}"),
+                  IconAndDetailValue(MdiIcons.library, "Wisdom: ",
+                      "${_character.abilities.wisdom}"),
+                ],
+              ),
+              const CircleAvatar(
+                  radius: 50,
+                  child: Icon(
+                    MdiIcons.faceManProfile,
+                    size: 100,
+                  )),
+            ],
+          ),
+        ),
+        // IconAndDetailValue(MdiIcons.starShooting, "Charisma: ",
+        //     "${_character.abilities.charisma}"),
+        // IconAndDetailValue(MdiIcons.heart, "Constitution: ",
+        //     "${_character.abilities.constitution}"),
+        // IconAndDetailValue(MdiIcons.runFast, "Dexterity: ",
+        //     "${_character.abilities.dexterity}"),
+        // IconAndDetailValue(MdiIcons.brain, "Intelligence: ",
+        //     "${_character.abilities.intelligence}"),
+        // IconAndDetailValue(
+        //     MdiIcons.armFlex, "Strength: ", "${_character.abilities.strength}"),
+        // IconAndDetailValue(
+        //     MdiIcons.library, "Wisdom: ", "${_character.abilities.wisdom}"),
+      ],
+    );
   }
 }
 

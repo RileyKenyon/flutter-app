@@ -52,7 +52,7 @@ class Character {
     return Character(
       name: data?['name'],
       race: data?['race'],
-      abilities: data?['abilities'] is Iterable
+      abilities: data?['abilities'] is Map
           ? getAbilitiesFromMap(Map.from(data?['abilities']))
           : Abilities(
               charisma: 0,
