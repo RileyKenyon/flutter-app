@@ -13,6 +13,7 @@ import 'package:beasts_and_bards/src/dio_widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:beasts_and_bards/data/character.dart';
 
 class Header extends StatelessWidget {
   const Header(this.heading, {super.key});
@@ -252,7 +253,8 @@ class _CharacterWidget extends State<CharacterWidget> {
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser != null) {
-      final Future<DocumentSnapshot?> ref = getDocumentRef(widget.streamId);
+      final Future<DocumentSnapshot?> ref =
+          getGameRefDocumentSnapshot(widget.streamId);
       return Center(
         child: FutureBuilder(
           builder: (context, snapshot) {
@@ -286,7 +288,7 @@ class _CharacterWidget extends State<CharacterWidget> {
   }
 }
 
-Future<DocumentSnapshot?> getDocumentRef(String id) async {
+Future<DocumentSnapshot?> getGameRefDocumentSnapshot(String id) async {
   final DocumentReference ref = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -298,6 +300,24 @@ Future<DocumentSnapshot?> getDocumentRef(String id) async {
         .withConverter(
             fromFirestore: Game.fromFirestore,
             toFirestore: (Game game, options) => game.toFirestore())
+        .get();
+  });
+  return document;
+}
+
+/// For this style - use the game ID as the key and return the user's character
+Future<DocumentSnapshot?> getCharacterRefDocumentSnapshot(String id) async {
+  final DocumentReference ref = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('games')
+      .doc(id);
+  Future<DocumentSnapshot?> document = ref.get().then((DocumentSnapshot doc) {
+    DocumentReference gameKey = doc.get("characterRef");
+    return gameKey
+        .withConverter(
+            fromFirestore: Character.fromFirestore,
+            toFirestore: (Character game, options) => game.toFirestore())
         .get();
   });
   return document;
