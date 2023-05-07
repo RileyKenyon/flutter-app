@@ -16,9 +16,17 @@ class GameDetailPage extends StatefulWidget {
   State<GameDetailPage> createState() => _GameDetailPage();
 }
 
-class _GameDetailPage extends State<GameDetailPage> {
+class _GameDetailPage extends State<GameDetailPage>
+    with TickerProviderStateMixin {
   ValueNotifier<dynamic> result = ValueNotifier(null);
   int _selectedIndex = 0;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
 
   @override
   void dispose() {
@@ -35,7 +43,13 @@ class _GameDetailPage extends State<GameDetailPage> {
   Widget build(BuildContext context) {
     widget.appState.activeGameId = widget.gameId;
     final List<Widget> widgets = <Widget>[
-      CharacterWidget(streamId: widget.gameId),
+      TabBarView(
+        controller: _tabController,
+        children: <Widget>[
+          CharacterInfoWidget(streamId: widget.gameId),
+          CharacterWidget(streamId: widget.gameId),
+        ],
+      ),
       // CharacterInfoWidget(streamId: widget.gameId),
       const Text('Inventory'),
       const DndManager(),
@@ -74,7 +88,29 @@ class _GameDetailPage extends State<GameDetailPage> {
           ],
         ),
       ),
-      appBar: AppBar(title: const Text('Quest')),
+      appBar: AppBar(
+        title: const Text('Quest'),
+        bottom: PreferredSize(
+          preferredSize:
+              _selectedIndex == 0 ? const Size.fromHeight(48) : Size.zero,
+          child: Visibility(
+            visible: _selectedIndex == 0,
+            child: TabBar(
+              tabs: const [
+                Tab(
+                  text: "Avatar",
+                  // icon: Icon(MdiIcons.chessKnight),
+                ),
+                Tab(
+                  text: "Party",
+                  // icon: Icon(MdiIcons.compass),
+                )
+              ],
+              controller: _tabController,
+            ),
+          ),
+        ),
+      ),
       body: Center(
         child: widgets.elementAt(_selectedIndex),
       ),
