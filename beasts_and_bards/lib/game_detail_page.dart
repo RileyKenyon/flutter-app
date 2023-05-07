@@ -47,11 +47,10 @@ class _GameDetailPage extends State<GameDetailPage>
         controller: _tabController,
         children: <Widget>[
           CharacterInfoWidget(streamId: widget.gameId),
-          CharacterWidget(streamId: widget.gameId),
+          PartyWidget(streamId: widget.gameId),
         ],
       ),
-      // CharacterInfoWidget(streamId: widget.gameId),
-      const Text('Inventory'),
+      const Text('You have no items!'),
       const DndManager(),
       const MapWidget(title: 'Map')
     ];

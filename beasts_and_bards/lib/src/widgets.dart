@@ -300,15 +300,15 @@ class _CharacterInfoWidget extends State<CharacterInfoWidget> {
   }
 }
 
-class CharacterWidget extends StatefulWidget {
-  const CharacterWidget({super.key, required this.streamId});
+class PartyWidget extends StatefulWidget {
+  const PartyWidget({super.key, required this.streamId});
   final String streamId;
 
   @override
-  State<CharacterWidget> createState() => _CharacterWidget();
+  State<PartyWidget> createState() => _PartyWidget();
 }
 
-class _CharacterWidget extends State<CharacterWidget> {
+class _PartyWidget extends State<PartyWidget> {
   @override
   void dispose() {
     super.dispose();
@@ -316,6 +316,7 @@ class _CharacterWidget extends State<CharacterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme theme = Theme.of(context).textTheme;
     if (FirebaseAuth.instance.currentUser != null) {
       final Future<DocumentSnapshot?> ref =
           getGameRefDocumentSnapshot(widget.streamId);
@@ -331,11 +332,33 @@ class _CharacterWidget extends State<CharacterWidget> {
                 return ListView(
                   children: [
                     // // Diagnostic
-                    Text("Game ID: ${g.gameId}"),
-                    Text("Dungeon Master: ${g.dm}"),
-                    Text("Game Name: ${g.name}"),
-                    Text("Active: ${g.active ? "Yes" : "No"}"),
-                    Text("Number of players: ${g.players.length}"),
+                    ListTile(
+                      title: Text(
+                        g.name,
+                        style: theme.headlineLarge,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Dungeon Master: ${g.dm}"),
+                          Text("Number of players: ${g.players.length}"),
+                          Text("Game ID: ${g.gameId}"),
+                        ],
+                      ),
+                      leading: const Icon(
+                        Icons.shield,
+                        size: 50,
+                        color: Colors.red,
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      itemBuilder: ((context, index) {
+                        return ListTile(title: Text(g.players[index].name));
+                      }),
+                      itemCount: g.players.length,
+                    )
                     // Actual widget
                   ],
                 );
