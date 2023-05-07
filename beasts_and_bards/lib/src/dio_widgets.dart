@@ -1,7 +1,6 @@
 import 'package:beasts_and_bards/src/widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:go_router/go_router.dart';
 
 class DndManager extends StatefulWidget {
@@ -42,7 +41,7 @@ class _DndManager extends State<DndManager> {
               },
             );
           } else {
-            child = const Icon(Icons.refresh);
+            child = const CircularProgressIndicator();
           }
           return Center(child: child);
         },

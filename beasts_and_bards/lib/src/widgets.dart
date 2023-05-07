@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:beasts_and_bards/app_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
