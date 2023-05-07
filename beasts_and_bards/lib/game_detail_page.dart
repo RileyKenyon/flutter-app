@@ -98,12 +98,10 @@ class _GameDetailPage extends State<GameDetailPage>
             child: TabBar(
               tabs: const [
                 Tab(
-                  text: "Avatar",
-                  // icon: Icon(MdiIcons.chessKnight),
+                  text: "Character",
                 ),
                 Tab(
                   text: "Party",
-                  // icon: Icon(MdiIcons.compass),
                 )
               ],
               controller: _tabController,

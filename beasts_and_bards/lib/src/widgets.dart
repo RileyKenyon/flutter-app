@@ -257,34 +257,6 @@ class AbilityWidget extends StatelessWidget {
       );
 }
 
-// class AbilityDisplayWidget extends StatelessWidget {
-//   const AbilityDisplayWidget(this.abilities, {super.key});
-//   final Abilities abilities;
-//   @override
-//   Widget build(BuildContext context) => Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           // shrinkWrap: true,
-//           // physics: const ClampingScrollPhysics(),
-//           children: [
-//             IconAndDetailValue(
-//                 MdiIcons.starShooting, "Charisma: ", "${abilities.charisma}"),
-//             IconAndDetailValue(
-//                 MdiIcons.heart, "Constitution: ", "${abilities.constitution}"),
-//             IconAndDetailValue(
-//                 MdiIcons.runFast, "Dexterity: ", "${abilities.dexterity}"),
-//             IconAndDetailValue(
-//                 MdiIcons.brain, "Intelligence: ", "${abilities.intelligence}"),
-//             IconAndDetailValue(
-//                 MdiIcons.armFlex, "Strength: ", "${abilities.strength}"),
-//             IconAndDetailValue(
-//                 MdiIcons.library, "Wisdom: ", "${abilities.wisdom}"),
-//           ],
-//         ),
-//       );
-// }
-
 class CharacterInfoWidget extends StatefulWidget {
   const CharacterInfoWidget({super.key, required this.streamId});
   final String streamId;
@@ -314,20 +286,6 @@ class _CharacterInfoWidget extends State<CharacterInfoWidget> {
               if (snapshot.hasData && snapshot.data!.data() != null) {
                 final character = snapshot.data!.data()! as Character;
                 return DisplayCharacterInfoWidget(character);
-                // ListView(
-                //   // This is for nested listviews
-                //   // shrinkWrap: true,
-                //   // physics: const ClampingScrollPhysics(),
-                //   children: [
-                //     // // Diagnostic
-                //     // Text("Name: ${character.name}"),
-                //     // Text("Race: ${character.race}"),
-                //     // Text("abili: ${g.name}"),
-                //     // Text("uuid: ${character.uuid}"),
-                //     // Actual widget
-                //     DisplayCharacterInfoWidget(character)
-                //   ],
-                // );
               } else {
                 return const Text("Create your character to view stats!");
               }
@@ -440,18 +398,6 @@ class DisplayCharacterInfoWidget extends StatelessWidget {
             ],
           ),
         ),
-        // IconAndDetailValue(MdiIcons.starShooting, "Charisma: ",
-        //     "${_character.abilities.charisma}"),
-        // IconAndDetailValue(MdiIcons.heart, "Constitution: ",
-        //     "${_character.abilities.constitution}"),
-        // IconAndDetailValue(MdiIcons.runFast, "Dexterity: ",
-        //     "${_character.abilities.dexterity}"),
-        // IconAndDetailValue(MdiIcons.brain, "Intelligence: ",
-        //     "${_character.abilities.intelligence}"),
-        // IconAndDetailValue(
-        //     MdiIcons.armFlex, "Strength: ", "${_character.abilities.strength}"),
-        // IconAndDetailValue(
-        //     MdiIcons.library, "Wisdom: ", "${_character.abilities.wisdom}"),
       ],
     );
   }
