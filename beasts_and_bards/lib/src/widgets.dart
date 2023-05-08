@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:beasts_and_bards/app_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -274,28 +275,36 @@ class _CharacterInfoWidget extends State<CharacterInfoWidget> {
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser != null) {
-      final Future<DocumentSnapshot?> ref =
-          getCharacterRefDocumentSnapshot(widget.streamId);
-      return Center(
-        child: FutureBuilder(
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting ||
-                snapshot.connectionState == ConnectionState.none) {
-              return const CircularProgressIndicator();
-            } else {
-              if (snapshot.hasData && snapshot.data!.data() != null) {
-                final character = snapshot.data!.data()! as Character;
-                return DisplayCharacterInfoWidget(character);
-              } else {
-                return const Text("Create your character to view stats!");
-              }
-            }
-          },
-          future: ref,
-        ),
+      var snapshot = getCharacterStream(widget.streamId);
+      return FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return StreamBuilder(
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      snapshot.connectionState == ConnectionState.none) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    if (snapshot.hasData &&
+                        snapshot.data != null &&
+                        snapshot.data!.data() != null) {
+                      final character = snapshot.data!.data()!;
+                      return DisplayCharacterInfoWidget(character);
+                    } else {
+                      return const Text("Create your character to view stats!");
+                    }
+                  }
+                },
+                stream: snapshot.data);
+          } else {
+            return const Center(
+                child: Text("Create your character to view stats!"));
+          }
+        },
+        future: snapshot,
       );
     } else {
-      return const Text("Oops, Something went wrong");
+      return const Center(child: Text('You are not authenticated'));
     }
   }
 }
@@ -444,19 +453,22 @@ Future<DocumentSnapshot?> getGameRefDocumentSnapshot(String id) async {
 }
 
 /// For this style - use the game ID as the key and return the user's character
-Future<DocumentSnapshot?> getCharacterRefDocumentSnapshot(String id) async {
+Future<Stream<DocumentSnapshot<Character>>?> getCharacterStream(
+    String id) async {
+  final ref = await getCharacterDocReference(id);
+  return ref
+      .withConverter(
+          fromFirestore: Character.fromFirestore,
+          toFirestore: (Character game, options) => game.toFirestore())
+      .snapshots();
+}
+
+Future<DocumentReference> getCharacterDocReference(id) async {
   final DocumentReference ref = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('games')
       .doc(id);
-  Future<DocumentSnapshot?> document = ref.get().then((DocumentSnapshot doc) {
-    DocumentReference gameKey = doc.get("characterRef");
-    return gameKey
-        .withConverter(
-            fromFirestore: Character.fromFirestore,
-            toFirestore: (Character game, options) => game.toFirestore())
-        .get();
-  });
-  return document;
+  DocumentSnapshot snapshot = await ref.get();
+  return await snapshot.get("characterRef");
 }
