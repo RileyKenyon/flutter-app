@@ -364,7 +364,19 @@ class _PartyWidget extends State<PartyWidget> {
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
                       itemBuilder: ((context, index) {
-                        return ListTile(title: Text(g.playersId[index]));
+                        return StreamBuilder(
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                return ListTile(
+                                    title: Text(snapshot.data!['name']));
+                              } else {
+                                return const Text('Oops');
+                              }
+                            },
+                            stream: FirebaseFirestore.instance
+                                .collection('character')
+                                .doc(g.playersId[index])
+                                .snapshots());
                       }),
                       itemCount: g.playersId.length,
                     )
