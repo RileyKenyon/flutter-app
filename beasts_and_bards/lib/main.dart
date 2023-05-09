@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:beasts_and_bards/data/character.dart';
 import 'package:beasts_and_bards/new_character_form.dart';
 import 'package:beasts_and_bards/nfc_reader.dart';
 import 'package:beasts_and_bards/src/widgets.dart';
@@ -141,6 +142,18 @@ final _router = GoRouter(
                 builder: (context, appState, _) => GameDetailPage(
                   appState: appState,
                   gameId: state.extra as String,
+                ),
+              );
+            }),
+        GoRoute(
+            path: 'character-detail',
+            builder: (context, state) {
+              return Consumer<ApplicationState>(
+                builder: (context, appState, _) => Scaffold(
+                  appBar: AppBar(title: const Text("Character Detail")),
+                  body: DisplayCharacterInfoWidget(
+                    state.extra as Character,
+                  ),
                 ),
               );
             }),

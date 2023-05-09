@@ -63,6 +63,7 @@ class Character {
               wisdom: 0),
       gameId: data?['gameId'],
       uuid: data?['uuid'],
+      active: data?['active'],
     );
   }
 

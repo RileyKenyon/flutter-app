@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:beasts_and_bards/data/game.dart';
 import 'package:beasts_and_bards/src/dio_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -367,8 +368,14 @@ class _PartyWidget extends State<PartyWidget> {
                         return StreamBuilder(
                             builder: (context, snapshot) {
                               if (snapshot.hasData && snapshot.data != null) {
+                                Character c = snapshot.data!.data()!;
                                 return ListTile(
-                                    title: Text(snapshot.data!['name']));
+                                    title: Text(c.name),
+                                    subtitle: Text("Race: ${c.race}"),
+                                    onTap: () => {
+                                          context.push('/character-detail',
+                                              extra: c)
+                                        });
                               } else {
                                 return const Text('Oops');
                               }
@@ -376,6 +383,11 @@ class _PartyWidget extends State<PartyWidget> {
                             stream: FirebaseFirestore.instance
                                 .collection('character')
                                 .doc(g.playersId[index])
+                                .withConverter(
+                                    fromFirestore: Character.fromFirestore,
+                                    toFirestore:
+                                        (Character character, options) =>
+                                            character.toFirestore())
                                 .snapshots());
                       }),
                       itemCount: g.playersId.length,
