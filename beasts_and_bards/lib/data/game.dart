@@ -1,15 +1,14 @@
-import 'package:beasts_and_bards/data/friend.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Game {
   Game(
       {required this.name,
-      required this.players,
+      required this.playersId,
       required this.gameId,
       this.dm = "",
       this.active = false});
   final String name;
-  final List<Friend> players;
+  final List<String> playersId;
   final String gameId;
   final String dm;
   final bool active;
@@ -21,9 +20,9 @@ class Game {
     final data = snapshot.data();
     return Game(
       name: data?['name'],
-      players: data?['players'] is Iterable
-          ? getFriendsList(data?['players'])
-          : List<Friend>.empty(growable: true),
+      playersId: data?['playersId'] is Iterable
+          ? List.from(data?['playersId'])
+          : List<String>.empty(growable: true),
       gameId: data?['gameId'],
       dm: data?['dm'],
     );
@@ -35,8 +34,7 @@ class Game {
       "dm": dm,
       "name": name,
       "active": active,
-      "players":
-          List<Map<String, dynamic>>.from(players.map((e) => e.toJson())),
+      "playersId": List<String>.from(playersId),
     };
   }
 }

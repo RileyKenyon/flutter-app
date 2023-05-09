@@ -350,7 +350,7 @@ class _PartyWidget extends State<PartyWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Dungeon Master: ${g.dm}"),
-                          Text("Number of players: ${g.players.length}"),
+                          Text("Number of players: ${g.playersId.length}"),
                           Text("Game ID: ${g.gameId}"),
                         ],
                       ),
@@ -364,9 +364,9 @@ class _PartyWidget extends State<PartyWidget> {
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
                       itemBuilder: ((context, index) {
-                        return ListTile(title: Text(g.players[index].name));
+                        return ListTile(title: Text(g.playersId[index]));
                       }),
-                      itemCount: g.players.length,
+                      itemCount: g.playersId.length,
                     )
                     // Actual widget
                   ],

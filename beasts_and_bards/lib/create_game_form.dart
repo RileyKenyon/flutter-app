@@ -23,7 +23,7 @@ class _CreateGameFormState extends State<CreateGameForm> {
   final textController = TextEditingController();
   final playerTextController = TextEditingController();
   var searchFriendList = <Friend>[];
-  var partyList = <Friend>[];
+  var partyList = List<String>.empty(growable: true);
 
   @override
   void dispose() {
@@ -77,28 +77,28 @@ class _CreateGameFormState extends State<CreateGameForm> {
                 },
               ),
             ),
-            Visibility(
-              visible: widget.appState.friendsList.isNotEmpty,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 300),
-                child: ListView.builder(
-                  itemCount: searchFriendList.length,
-                  prototypeItem: ListTile(
-                    title: Text(searchFriendList.isNotEmpty
-                        ? searchFriendList.first.name
-                        : "None"),
-                  ),
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(searchFriendList[index].name),
-                      onTap: () {
-                        partyList.add(searchFriendList[index]);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
+            // Visibility(
+            //   visible: widget.appState.friendsList.isNotEmpty,
+            //   child: ConstrainedBox(
+            //     constraints: const BoxConstraints(maxHeight: 300),
+            //     child: ListView.builder(
+            //       itemCount: searchFriendList.length,
+            //       prototypeItem: ListTile(
+            //         title: Text(searchFriendList.isNotEmpty
+            //             ? searchFriendList.first.name
+            //             : "None"),
+            //       ),
+            //       itemBuilder: (context, index) {
+            //         return ListTile(
+            //           title: Text(searchFriendList[index].name),
+            //           onTap: () {
+            //             partyList.add(searchFriendList[index]);
+            //           },
+            //         );
+            //       },
+            //     ),
+            //   ),
+            // ),
             OutlinedButton(
                 child:
                     const IconAndDetail(Icons.insert_emoticon_sharp, "Submit"),
@@ -109,7 +109,7 @@ class _CreateGameFormState extends State<CreateGameForm> {
                     widget.appState.addGameToDatabase(
                       Game(
                           name: textController.text,
-                          players: partyList,
+                          playersId: partyList,
                           gameId: uuidGenerator.v1(),
                           dm: username,
                           active: false),

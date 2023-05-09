@@ -34,7 +34,7 @@ class ApplicationState extends ChangeNotifier {
 
   Uuid uuidGen = const Uuid();
 
-  StreamSubscription<QuerySnapshot>? _databaseSubscription;
+  // StreamSubscription<QuerySnapshot>? _databaseSubscription;
   StreamSubscription<QuerySnapshot>? _friendsListSubscription;
   List<Friend> _friendsList = [];
   List<Friend> get friendsList => _friendsList;
@@ -75,26 +75,26 @@ class ApplicationState extends ChangeNotifier {
         }
         notifyListeners();
       });
-      _databaseSubscription = FirebaseFirestore.instance
-          .collection('games')
-          .snapshots()
-          .listen((snapshot) {
-        _gameList = [];
-        for (final doc in snapshot.docs) {
-          List<Friend> players = [];
-          for (final f in doc.data()['players']) {
-            players.add(Friend(name: f, message: ""));
-          }
-          _gameList.add(Game(
-              name: doc.data()['text'],
-              players: players,
-              gameId: doc.id,
-              dm: doc.data()['name'],
-              active: false));
-        }
-        stdout.writeln('Number of games ${snapshot.docs.length}');
-        notifyListeners();
-      });
+      // _databaseSubscription = FirebaseFirestore.instance
+      //     .collection('games')
+      //     .snapshots()
+      //     .listen((snapshot) {
+      //   _gameList = [];
+      //   for (final doc in snapshot.docs) {
+      //     List<Friend> players = [];
+      //     for (final f in doc.data()['players']) {
+      //       players.add(Friend(name: f, message: ""));
+      //     }
+      //     _gameList.add(Game(
+      //         name: doc.data()['text'],
+      //         players: players,
+      //         gameId: doc.id,
+      //         dm: doc.data()['name'],
+      //         active: false));
+      //   }
+      //   stdout.writeln('Number of games ${snapshot.docs.length}');
+      //   notifyListeners();
+      // });
     }
 
     FirebaseAuth.instance.userChanges().listen((user) {
@@ -120,35 +120,35 @@ class ApplicationState extends ChangeNotifier {
           }
           notifyListeners();
         });
-        _databaseSubscription = FirebaseFirestore.instance
-            .collection('games')
-            .snapshots()
-            .listen((snapshot) {
-          _gameList = [];
-          for (final doc in snapshot.docs) {
-            List<Friend> players = [];
-            if (doc.data()['players'] != null) {
-              List<String> playerNames = List.from(doc.data()['players']);
-              for (final f in playerNames) {
-                players.add(Friend(name: f, message: ""));
-              }
-            }
-            _gameList.add(
-              Game(
-                  name: doc.data()['text'],
-                  players: players,
-                  gameId: doc.id,
-                  dm: doc.data()['name'],
-                  active: false),
-            );
-          }
-          stdout.writeln('Number of games ${snapshot.docs.length}');
-          notifyListeners();
-        });
+        // _databaseSubscription = FirebaseFirestore.instance
+        //     .collection('games')
+        //     .snapshots()
+        //     .listen((snapshot) {
+        //   _gameList = [];
+        //   for (final doc in snapshot.docs) {
+        //     List<Friend> players = [];
+        //     if (doc.data()['players'] != null) {
+        //       List<String> playerNames = List.from(doc.data()['players']);
+        //       for (final f in playerNames) {
+        //         players.add(Friend(name: f, message: ""));
+        //       }
+        //     }
+        //     _gameList.add(
+        //       Game(
+        //           name: doc.data()['text'],
+        //           players: players,
+        //           gameId: doc.id,
+        //           dm: doc.data()['name'],
+        //           active: false),
+        //     );
+        //   }
+        //   stdout.writeln('Number of games ${snapshot.docs.length}');
+        //   notifyListeners();
+        // });
       } else {
         _loggedIn = false;
         _emailVerified = false;
-        _databaseSubscription?.cancel();
+        // _databaseSubscription?.cancel();
       }
       notifyListeners();
     });
@@ -182,10 +182,10 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
-    List<String> playerNames = [];
-    for (final player in newgame.players) {
-      playerNames.add(player.name);
-    }
+    // List<String> playerNames = [];
+    // for (final player in newgame.players) {
+    //   playerNames.add(player.name);
+    // }
 
     DocumentReference ref = FirebaseFirestore.instance
         .collection('games')
@@ -211,9 +211,7 @@ class ApplicationState extends ChangeNotifier {
     DocumentReference db =
         FirebaseFirestore.instance.collection('games').doc(activeGameId);
     return db.update({
-      'players': FieldValue.arrayUnion([
-        {'name': character.name, 'message': ""}
-      ])
+      'playersId': FieldValue.arrayUnion([character.uuid])
       // 'players': [character.name],
     });
   }
