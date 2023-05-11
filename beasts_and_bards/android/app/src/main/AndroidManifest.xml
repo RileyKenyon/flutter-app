@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.beasts_and_bards">
+    package="com.beastsandbards.android">
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-feature android:name="android.hardware.nfc" android:required="true"/>
 
     <application
-        android:label="beasts_and_bards"
+        android:label="beastsandbards"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
