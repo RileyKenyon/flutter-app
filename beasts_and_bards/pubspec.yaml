@@ -49,6 +49,7 @@ dependencies:
   dio: ^5.1.1
   material_design_icons_flutter: ^6.0.7096
   uuid: ^3.0.7
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
