@@ -31,63 +31,70 @@ class _DashboardPage extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(color: Colors.red),
-                child: Image(image: AssetImage('assets/d20.png')),
-              ),
-              ListTile(
-                title: const Text('Go Home'),
-                onTap: () => (context.go('/')),
-              ),
-              ListTile(
-                title: const Text('Profile'),
-                onTap: () => (context.go('/profile')),
-              )
-            ],
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.red),
+              child: Image(image: AssetImage('assets/d20.png')),
+            ),
+            ListTile(
+              title: const Text('Go Home'),
+              onTap: () => (context.go('/')),
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () => (context.go('/profile')),
+            )
+          ],
+        ),
+      ),
+      appBar: AppBar(title: const Text("Dashboard")),
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: _dashboardStream,
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+
+          if (snapshot.hasError || !snapshot.hasData) {
+            return const Text('Oops something went wrong');
+          }
+
+          if (snapshot.data == null) {
+            return const Text('Create a game to get started!');
+          }
+          return ListView(
+            children: snapshot.data!.docs
+                .map((DocumentSnapshot<Map<String, dynamic>> document) {
+                  // @TODO figure out how to use the Firestore instance withconverter instead
+                  SnapshotOptions? options;
+                  final data = Game.fromFirestore(document, options);
+                  return DashboardListItem(
+                      game: data,
+                      onTap: () =>
+                          {context.push('/game-detail', extra: data.gameId)});
+                })
+                .toList()
+                .cast(),
+          );
+        },
+      ),
+      floatingActionButton: ExpandableFab(
+        distance: 75.0,
+        children: [
+          ActionButton(
+            onPressed: () => context.push('/create-game'),
+            icon: const Icon(Icons.add),
           ),
-        ),
-        appBar: AppBar(title: const Text("Dashboard")),
-        body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: _dashboardStream,
-          builder: (context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
-
-            if (snapshot.hasError || !snapshot.hasData) {
-              return const Text('Oops something went wrong');
-            }
-
-            if (snapshot.data == null) {
-              return const Text('Create a game to get started!');
-            }
-            return ListView(
-              children: snapshot.data!.docs
-                  .map((DocumentSnapshot<Map<String, dynamic>> document) {
-                    // @TODO figure out how to use the Firestore instance withconverter instead
-                    SnapshotOptions? options;
-                    final data = Game.fromFirestore(document, options);
-                    return DashboardListItem(
-                        game: data,
-                        onTap: () =>
-                            {context.push('/game-detail', extra: data.gameId)});
-                  })
-                  .toList()
-                  .cast(),
-            );
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
-          shape: const CircleBorder(),
-          onPressed: () => context.push('/create-game'),
-          child: const Icon(Icons.add),
-        ));
+          ActionButton(
+            onPressed: () => context.push('/create-game'),
+            icon: const Icon(Icons.people),
+          ),
+        ],
+      ),
+    );
   }
 }
