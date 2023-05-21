@@ -90,7 +90,7 @@ class _DashboardPage extends State<DashboardPage> {
             icon: const Icon(Icons.add),
           ),
           ActionButton(
-            onPressed: () => context.push('/create-game'),
+            onPressed: () => context.push('/friends-list'),
             icon: const Icon(Icons.people),
           ),
         ],

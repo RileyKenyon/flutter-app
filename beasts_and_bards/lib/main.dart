@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:beasts_and_bards/data/character.dart';
+import 'package:beasts_and_bards/friends_list_page.dart';
 import 'package:beasts_and_bards/new_character_form.dart';
 import 'package:beasts_and_bards/nfc_reader.dart';
 import 'package:beasts_and_bards/src/widgets.dart';
@@ -130,6 +131,16 @@ final _router = GoRouter(
             builder: (context, state) {
               return Consumer<ApplicationState>(
                 builder: (context, appState, _) => CreateGameForm(
+                  key: ValueKey(appState.loggedIn),
+                  appState: appState,
+                ),
+              );
+            }),
+        GoRoute(
+            path: 'friends-list',
+            builder: (context, state) {
+              return Consumer<ApplicationState>(
+                builder: (context, appState, _) => FriendsListPage(
                   key: ValueKey(appState.loggedIn),
                   appState: appState,
                 ),
