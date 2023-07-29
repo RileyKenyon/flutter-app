@@ -20,13 +20,20 @@ import 'create_game_form.dart';
 import 'game_detail_page.dart';
 import 'src/dio_widgets.dart';
 import 'data/game.dart';
+import 'nfc_notifier.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => ApplicationState(),
-    builder: ((context, child) => const App()),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => ApplicationState(),
+        // builder: ((context, child) => const App()),
+      ),
+      ChangeNotifierProvider(create: (context) => NfcModel())
+    ],
+    child: const App(),
   ));
 }
 
@@ -180,8 +187,8 @@ final _router = GoRouter(
         GoRoute(
             path: 'create-new-character',
             builder: (context, state) {
-              return Consumer<ApplicationState>(
-                builder: (context, appState, _) => NewCharacterPage(
+              return Consumer2<ApplicationState, NfcModel>(
+                builder: (context, appState, nfcModel, _) => NewCharacterPage(
                   appState: appState,
                 ),
               );

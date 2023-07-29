@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:uuid/uuid.dart';
+import 'package:provider/provider.dart';
+import 'nfc_notifier.dart';
 import 'src/dio_widgets.dart';
 import 'data/character.dart';
 
@@ -30,6 +32,8 @@ class _NewCharacterPage extends State<NewCharacterPage> {
   final abilityControllers = List<TextEditingController>.generate(
       6, (int n) => TextEditingController(),
       growable: false);
+  int counter = 0;
+
   @override
   void dispose() {
     super.dispose();
@@ -37,97 +41,119 @@ class _NewCharacterPage extends State<NewCharacterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("CREATE A NEW CHARACTER")),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: ListView(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Text("Create a new Character!",
-                    style: Theme.of(context).textTheme.titleLarge),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                      icon: Icon(MdiIcons.head),
-                      border: OutlineInputBorder(),
-                      hintText: "Character Name",
-                      labelText: "Character Name"),
-                  controller: nameController,
+    return ChangeNotifierProvider(
+      create: (context) => NdefWriteModel(),
+      child: Scaffold(
+        appBar: AppBar(title: const Text("CREATE A NEW CHARACTER")),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Text("Create a new Character!",
+                      style: Theme.of(context).textTheme.titleLarge),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                      icon: Icon(MdiIcons.tree),
-                      border: OutlineInputBorder(),
-                      hintText: "Race Name",
-                      labelText: "Race Name"),
-                  controller: raceController,
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                        icon: Icon(MdiIcons.head),
+                        border: OutlineInputBorder(),
+                        hintText: "Character Name",
+                        labelText: "Character Name"),
+                    controller: nameController,
+                  ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        AbilityWidget(
-                            "Charisma",
-                            const Icon(MdiIcons.starShooting),
-                            abilityControllers[0]),
-                        AbilityWidget(
-                          "Constitution",
-                          const Icon(MdiIcons.heart),
-                          abilityControllers[1],
-                          key: const Key("Constitution"),
-                        ),
-                        AbilityWidget("Dexterity", const Icon(MdiIcons.runFast),
-                            abilityControllers[2]),
-                      ],
-                    ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                        icon: Icon(MdiIcons.tree),
+                        border: OutlineInputBorder(),
+                        hintText: "Race Name",
+                        labelText: "Race Name"),
+                    controller: raceController,
                   ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        AbilityWidget("Intelligence",
-                            const Icon(MdiIcons.brain), abilityControllers[3]),
-                        AbilityWidget("Strength", const Icon(MdiIcons.armFlex),
-                            abilityControllers[4]),
-                        AbilityWidget("Wisdom", const Icon(MdiIcons.library),
-                            abilityControllers[5]),
-                      ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          AbilityWidget(
+                              "Charisma",
+                              const Icon(MdiIcons.starShooting),
+                              abilityControllers[0]),
+                          AbilityWidget(
+                            "Constitution",
+                            const Icon(MdiIcons.heart),
+                            abilityControllers[1],
+                            key: const Key("Constitution"),
+                          ),
+                          AbilityWidget(
+                              "Dexterity",
+                              const Icon(MdiIcons.runFast),
+                              abilityControllers[2]),
+                        ],
+                      ),
                     ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          AbilityWidget(
+                              "Intelligence",
+                              const Icon(MdiIcons.brain),
+                              abilityControllers[3]),
+                          AbilityWidget(
+                              "Strength",
+                              const Icon(MdiIcons.armFlex),
+                              abilityControllers[4]),
+                          AbilityWidget("Wisdom", const Icon(MdiIcons.library),
+                              abilityControllers[5]),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SafeArea(child: NfcWriter()),
+                Consumer<NdefWriteModel>(
+                  builder: (context, value, child) => Text("${value.payload}"),
+                ),
+                Consumer<NdefWriteModel>(
+                  builder: (context, value, child) => ElevatedButton(
+                    onPressed: () {
+                      Uuid uuid = const Uuid();
+                      String id = uuid.v1();
+                      Character character = Character(
+                          name: nameController.text,
+                          race: raceController.text,
+                          abilities: Abilities(
+                              charisma: int.parse(abilityControllers[0].text),
+                              constitution:
+                                  int.parse(abilityControllers[1].text),
+                              dexterity: int.parse(abilityControllers[2].text),
+                              intelligence:
+                                  int.parse(abilityControllers[3].text),
+                              strength: int.parse(abilityControllers[4].text),
+                              wisdom: int.parse(abilityControllers[5].text)),
+                          gameId: widget.appState.activeGameId,
+                          uuid: id);
+                      widget.submitCharacterToDatabase(character);
+                      widget.addCharacterToActiveGame(character);
+                      value.setPayload(id);
+                      // context.pop();
+                    },
+                    child: const Text("Submit Character"),
                   ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Uuid uuid = const Uuid();
-                  Character character = Character(
-                      name: nameController.text,
-                      race: raceController.text,
-                      abilities: Abilities(
-                          charisma: int.parse(abilityControllers[0].text),
-                          constitution: int.parse(abilityControllers[1].text),
-                          dexterity: int.parse(abilityControllers[2].text),
-                          intelligence: int.parse(abilityControllers[3].text),
-                          strength: int.parse(abilityControllers[4].text),
-                          wisdom: int.parse(abilityControllers[5].text)),
-                      gameId: widget.appState.activeGameId,
-                      uuid: uuid.v1());
-                  widget.submitCharacterToDatabase(character);
-                  widget.addCharacterToActiveGame(character);
-                  context.pop();
-                },
-                child: const Text("Submit Character"),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
