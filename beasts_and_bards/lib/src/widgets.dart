@@ -595,6 +595,26 @@ class _ExpandableFabState extends State<ExpandableFab>
   }
 
   List<Widget> _buildExpandingActionButtons() {
+    return _buildLinearActionButtons();
+  }
+
+  List<Widget> _buildLinearActionButtons() {
+    final children = <Widget>[];
+    final count = widget.children.length;
+    for (var i = 0; i < count; i++) {
+      children.add(
+        _ExpandingActionButton(
+          directionInDegrees: 90.0,
+          maxDistance: (i + 1) * widget.distance,
+          progress: _expandAnimation,
+          child: widget.children[i],
+        ),
+      );
+    }
+    return children;
+  }
+
+  List<Widget> _buildRadialActionButtons() {
     final children = <Widget>[];
     final count = widget.children.length;
     final step = 90.0 / (count - 1);
