@@ -1,4 +1,4 @@
-package com.example.beasts_and_bards
+package com.beastsandbards.android
 
 import io.flutter.embedding.android.FlutterActivity
 
