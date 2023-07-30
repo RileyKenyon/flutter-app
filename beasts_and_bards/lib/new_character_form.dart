@@ -41,6 +41,7 @@ class _NewCharacterPage extends State<NewCharacterPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Only need the write model to be provided to subtree of new character
     return ChangeNotifierProvider(
       create: (context) => NdefWriteModel(),
       child: Scaffold(
@@ -121,37 +122,65 @@ class _NewCharacterPage extends State<NewCharacterPage> {
                     ),
                   ],
                 ),
-                const SafeArea(child: NfcWriter()),
                 Consumer<NdefWriteModel>(
-                  builder: (context, value, child) => Text("${value.payload}"),
+                  builder: (context, value, child) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        Uuid uuid = const Uuid();
+                        String id = uuid.v1();
+                        Character character = Character(
+                            name: nameController.text,
+                            race: raceController.text,
+                            abilities: Abilities(
+                                charisma: int.parse(abilityControllers[0].text),
+                                constitution:
+                                    int.parse(abilityControllers[1].text),
+                                dexterity:
+                                    int.parse(abilityControllers[2].text),
+                                intelligence:
+                                    int.parse(abilityControllers[3].text),
+                                strength: int.parse(abilityControllers[4].text),
+                                wisdom: int.parse(abilityControllers[5].text)),
+                            gameId: widget.appState.activeGameId,
+                            uuid: id);
+                        widget.submitCharacterToDatabase(character);
+                        widget.addCharacterToActiveGame(character);
+                        value.setPayload(id);
+
+                        // Check if NFC is supported and not written to
+                        if (Provider.of<NfcModel>(context, listen: false)
+                            .isAvailable) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Pair with NFC token"),
+                                content: const Icon(
+                                  Icons.nfc,
+                                  size: 100,
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Back to character creator
+                                        Navigator.of(context)
+                                            .pop(); // Back to game detail
+                                      },
+                                      child: const Text("Okay")),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          context.pop();
+                        }
+                      },
+                      child: const Text("Submit Character"),
+                    );
+                  },
                 ),
-                Consumer<NdefWriteModel>(
-                  builder: (context, value, child) => ElevatedButton(
-                    onPressed: () {
-                      Uuid uuid = const Uuid();
-                      String id = uuid.v1();
-                      Character character = Character(
-                          name: nameController.text,
-                          race: raceController.text,
-                          abilities: Abilities(
-                              charisma: int.parse(abilityControllers[0].text),
-                              constitution:
-                                  int.parse(abilityControllers[1].text),
-                              dexterity: int.parse(abilityControllers[2].text),
-                              intelligence:
-                                  int.parse(abilityControllers[3].text),
-                              strength: int.parse(abilityControllers[4].text),
-                              wisdom: int.parse(abilityControllers[5].text)),
-                          gameId: widget.appState.activeGameId,
-                          uuid: id);
-                      widget.submitCharacterToDatabase(character);
-                      widget.addCharacterToActiveGame(character);
-                      value.setPayload(id);
-                      // context.pop();
-                    },
-                    child: const Text("Submit Character"),
-                  ),
-                ),
+                const NfcWriter(),
               ],
             ),
           ),

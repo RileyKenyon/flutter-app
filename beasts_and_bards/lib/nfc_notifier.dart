@@ -11,11 +11,13 @@ class NfcModel extends ChangeNotifier {
 
   Future<void> startSession(Future<void> Function(NfcTag) callback) async {
     isAvailable = await NfcManager.instance.isAvailable();
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      this.tag = tag;
-      callback(tag);
-      notifyListeners();
-    });
+    if (isAvailable) {
+      NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+        this.tag = tag;
+        callback(tag);
+        notifyListeners();
+      });
+    }
     notifyListeners();
     return;
   }
@@ -109,7 +111,8 @@ class _NfcWriter extends State<NfcWriter> {
     Provider.of<NfcModel>(context).startSession(writeTag);
     return ValueListenableBuilder<void>(
         valueListenable: msgWritten,
-        builder: (context, value, child) =>
-            Text(msgWritten.value ? "Written" : "Not Written"));
+        builder: (context, value, child) {
+          return Text(msgWritten.value ? "Written" : "Not Written");
+        });
   }
 }

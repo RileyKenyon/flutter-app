@@ -28,6 +28,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- https://pub.dev/documentation/uni_links_nfc_support/latest/ -->
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
                 <action android:name="android.nfc.action.TECH_DISCOVERED"/>

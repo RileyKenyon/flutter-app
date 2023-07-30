@@ -44,10 +44,6 @@ class ApplicationState extends ChangeNotifier {
   List<Game> get gameList => _gameList;
   String activeGameId = "";
 
-  // NFC
-  bool _nfcTagSync = false;
-  bool get nfcTagSync => _nfcTagSync;
-
   Future<void> init() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
